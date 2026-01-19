@@ -1,0 +1,93 @@
+@media print {
+  /* Hilangkan semua elemen di luar area yang ingin dicetak */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Hanya tampilkan area yang di-print */
+  .transaction-section, .transaction-section * {
+    visibility: visible;
+  }
+
+  /* Atur area print agar pas ukuran struk */
+  .transaction-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    padding: 8px;
+    background: #fff;
+    color: #000;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Hilangkan tombol-tombol */
+  .action-buttons {
+    display: none !important;
+  }
+
+  /* Sembunyikan input, ganti dengan nilai text */
+  input, select, textarea {
+    border: none;
+    background: none;
+    pointer-events: none;
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Tabel tampilan pesanan */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+
+  th, td {
+    padding: 2px 0;
+    text-align: left;
+  }
+
+  th {
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+  }
+
+  td.text-center {
+    text-align: center;
+  }
+
+  td.text-end {
+    text-align: right;
+  }
+
+  /* Bagian total */
+  .summary {
+    border-top: 1px dashed #000;
+    margin-top: 6px;
+    padding-top: 4px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
+  .summary-row.total {
+    font-weight: bold;
+    border-top: 1px solid #000;
+    padding-top: 4px;
+  }
+
+  /* Teks footer atau catatan */
+  .receipt-footer {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 11px;
+    border-top: 1px dashed #000;
+    padding-top: 4px;
+  }
+}
