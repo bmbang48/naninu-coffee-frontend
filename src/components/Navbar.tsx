@@ -8,7 +8,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
         <div className="container">
             <a className="navbar-brand p-0" href="#">
-                <img src={logoNav} alt="" className="logo-nav"/> BEMBY COFFEE
+                <img src={logoNav} alt="" className="logo-nav"/> NANINU COFFEE
             </a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span className="navbar-toggler-icon"></span>
