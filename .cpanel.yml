@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/nans7393/public_html
+    - /bin/find $DEPLOYPATH -mindepth 1 -maxdepth 1 ! -name 'api' -exec rm -rf {} +
+    - /bin/cp -R dist/* $DEPLOYPATH
