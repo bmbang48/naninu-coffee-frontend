@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useProducts} from "../api/useProduct";
+import { useProductsCashier} from "../api/useProduct";
 import { baseUrl } from "../api/baseUrl";
 import NotificationAlert from "../components/NotificationAlert";
 import { formatCurrency } from "../components/FormatCurrency";
@@ -8,11 +8,14 @@ import { useStoreTransaction } from "../api/useTransaction";
 import { useReactToPrint } from "react-to-print";
 
 const CashierPage = () => {
-
-  const {data: products, isLoading:productsIsLoading, error: productsError} = useProducts();
+  const [page, setPage] = useState(1)
+  const {data: products, isLoading:productsIsLoading, error: productsError} = useProductsCashier(page);
       // console.log(products);
       // productsIsLoading ? console.log('Loading...') : console.log(products.data);
       const items = products?.data??[];
+      console.log('ini Items', items);
+      const currentPage = products?.current_page ?? 1;
+      const lastPage = products?.last_page ?? 1;
   
       type Product = {
         id: number;
@@ -176,7 +179,7 @@ const CashierPage = () => {
 
     const filteredList = productsList.filter(product => product.qty > 0);
     
-    const filteredProducts = (items.data ?? []).filter((p)=>
+    const filteredProducts = (items ?? []).filter((p)=>
       p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -197,13 +200,13 @@ const CashierPage = () => {
           subject="Transaksi Berhasil Disimpan"
           handleCloseForm={()=>setIsSuccess(false)}
         />) : null}
-        <div className="row">
-            <div className="col-7">
-                <div className="products-section">
+        <div className="row d-flex flex-column flex-column-reverse flex-md-row">
+            <div className="col-md-7 col-sm-12 mt-3 h-75 ">
+                <div className="products-section h-75  row">
                   <div className="header-products-section d-flex justify-content-between">
-                    <h2 className="section-title d-block">☕ Menu Produk</h2>
+                    <h2 className="section-title d-block mt-2 mt-md-0">☕ Menu Produk</h2>
                     <form className="d-block" role="search">
-                      <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)}/>
+                      <input className="form-control me-1 ms-2 me-md-2" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)}/>
                     </form>
                   </div>
                   <div className="products-grid">
@@ -215,11 +218,11 @@ const CashierPage = () => {
                       <p>Loading...</p>
                     ) : filteredProducts.map((product, index)=>(
                       
-                      <div className="product-card d-flex flex-column justify-content-between h-100 bg-light"  key={index} >
-                          <div className="product-image mb-3 bg-light">
+                      <div className="product-card d-flex flex-column justify-content-between bg-light"  key={index} >
+                          <div className="product-image mb-2 mb-md-3 bg-light">
                             <img src={`${baseUrl}/storage/products/${product.image}`} alt="picture product" className="img-product-cashier"/>
                           </div>
-                          <div className="product-name">{product.product_name}</div>
+                          <div className="product-name ">{product.product_name}</div>
                           <div className="product-description">{product.description}</div>
                           <div className="product-price">{formatCurrency(product.price)}</div>
                           <div className="button-action d-flex justify-content-between">
@@ -254,14 +257,43 @@ const CashierPage = () => {
                     }
                   </div>
                 </div>
+                <div className="row">
+                  <div className="col-12 mt-3">
+                <nav aria-label="Product pagination">
+                    <ul className="pagination justify-content-center">
+                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                            <a className="page-link"
+                                onClick={() => setPage((old)=> old - 1)}
+                                >
+                                    {"<"}
+                            </a>
+                        </li>
+                        {Array.from({length:lastPage}, (_, i)=>(
+                            <li key={i} onClick={()=>setPage(i+1)}>
+                                <a className={`px-2 page-link ${page === i+1 ? "font-bold underline" : ""}`}>
+                                    {i+1}
+                                </a>
+                            </li>
+                        ))}
+                        <li className={`page-item ${currentPage === lastPage ? "disabled" : ""}`}>
+                            <a className="page-link"
+                                onClick={()=> setPage((old)=> old + 1)}
+                                >
+                                {">"}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <div className="col-md-5">
+                </div>
+            </div>
+            <div className="col-md-5 col-sm-12 mt-3">
               <div className="transaction-section">
-                <h2 className="section-title">🧾 Detail Transaksi</h2>            
+                <h2 className="section-title mb-3 mb-md-">🧾 Detail Transaksi</h2>            
                 <div className="customer-info" >
                     <div className="input-group">
                         <label className="input-label">Nama Pelanggan</label>
-                        <input type="text" className="input-field" name="nama" id="nama" onChange={(e) => setCustomerName(e.target.value)}  placeholder="Masukkan nama pelanggan"></input>
+                        <input type="text" className="input-field" name="nama" id="nama" value={customerName} onChange={(e) => setCustomerName(e.target.value)}  placeholder="Masukkan nama pelanggan"></input>
                     </div>
                     <div className="input-group">
                         <label className="input-label">No. Pesanan</label>

@@ -12,6 +12,7 @@ const fetchProducts = async () => {
       'Accept': 'application/json',
     }
   });
+  console.log(baseUrl);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
@@ -22,6 +23,30 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
+  });
+}
+
+const fetchProductsCashier = async(page:number)=>{
+  const response = await fetch(`${baseUrl}/api/products-cashier?page=${page}`, {
+    credentials: 'include',
+    headers: {
+      accept: 'application/json',
+    },
+  });
+
+  if(!response.ok){
+    throw new Error("Failed to fetch products cashier");
+  }
+  const json = await response.json();
+  return json.data ?? [];
+}
+
+
+export const useProductsCashier = (page?:number)=>{
+  const currentPage = page ?? 1;
+  return useQuery({
+    queryKey: ['products', currentPage],
+    queryFn: ()=>fetchProductsCashier(currentPage)
   });
 }
 

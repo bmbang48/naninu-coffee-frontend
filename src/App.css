@@ -244,7 +244,7 @@
 
         .product-card {
             transition: all 0.2s ease;
-            height: 50vh !important;
+            /* height: 50vh !important; */
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
@@ -340,14 +340,14 @@
             border: 1px solid rgba(45, 90, 61, 0.08);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            height: 100vh;
         }
 
         .section-title {
             font-size: 20px;
             font-weight: 600;
             color: #2d5a3d;
-            margin-bottom: 24px;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
             flex-shrink: 0;
@@ -483,11 +483,11 @@
         }
 
         .customer-info {
-            margin-bottom: 24px;
+            margin-bottom: 4px;
         }
 
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 6px;
         }
 
         .input-label {
@@ -1372,11 +1372,11 @@
     text-align: center; /* kalau mau semua isi ke tengah */
   }
 }
- .print-receipt .print-header h2{
-    
- }
 
         @media (max-width: 768px) {
+            .navbar-brand{
+                font-size: 1rem;
+            }
             .modal {
                 padding: 25px;
                 margin: 10px;
@@ -1391,9 +1391,6 @@
             .modal-title {
                 font-size: 20px;
             }
-        }
-        
-        @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
             }
@@ -1404,6 +1401,22 @@
             
             .coffee-icon {
                 font-size: 3rem;
+            }
+            .main-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            .product-card {
+                padding: 10px;
+                padding-top: 20px;
+            }
+            .products-section{
+                height: 500px;
+                overflow-y: scroll;
             }
         }
 
@@ -1418,17 +1431,6 @@
             }
             
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-            
-            .table-responsive {
-                font-size: 0.875rem;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
         }

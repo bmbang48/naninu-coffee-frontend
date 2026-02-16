@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
 
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div className="container">
+        <div className="container ">
             <a className="navbar-brand p-0" href="#">
                 <img src={logoNav} alt="" className="logo-nav"/> NANINU COFFEE
             </a>
@@ -28,7 +28,7 @@ const Navbar = () => {
                     <Link className="nav-item nav-link text-white" to="/oprational">Oprational</Link>
                   </li> */}
                   <li>
-                    <Link className="nav-item nav-link text-white" to="/hpp">Cost and Benefit</Link>
+                    <Link className="nav-item nav-link text-white" to="/hpp">Profit Margin</Link>
                   </li>
                   <li>
                     <Link className="nav-item nav-link text-white" to="/transactions">Transactions</Link>
