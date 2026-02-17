@@ -13,8 +13,9 @@ import { Product } from "../types/product";
     // console.log(products);
     // productsIsLoading ? console.log('Loading...') : console.log(products.data);
     const items = products?.data??[];
-    const currentPage = products?.current_page ?? 1;
-    const lastPage = products?.last_page ?? 1;
+    const currentPage = products?.data?.current_page ?? 1;
+    const lastPage = products?.data?.last_page ?? 1;
+    console.log(products);
 
     const [isActiveForm, setIsActiveForm] = useState(false);
     const [formData, setFormData] = useState<Product | null>(null);
