@@ -8,10 +8,13 @@ import { Product } from "../types/product";
 
 
   const ProductPage = () => {
-    const {data: products, isLoading:productsIsLoading, error: productsError} = useProducts();
+    const [page,setPage] = useState(1);
+    const {data: products, isLoading:productsIsLoading, error: productsError} = useProducts(page);
     // console.log(products);
     // productsIsLoading ? console.log('Loading...') : console.log(products.data);
     const items = products?.data??[];
+    const currentPage = products?.current_page ?? 1;
+    const lastPage = products?.last_page ?? 1;
 
     const [isActiveForm, setIsActiveForm] = useState(false);
     const [formData, setFormData] = useState<Product | null>(null);
@@ -55,7 +58,7 @@ import { Product } from "../types/product";
     
     return (
       <div className="container">
-        <h1 className="text-center">Our Products</h1>
+        <h1 className="text-center mt-3">Our Products</h1>
         
         {
           isActiveForm && (
@@ -76,8 +79,8 @@ import { Product } from "../types/product";
           setIsConfirmDelete={setIsConfirmDelete} /> : null
         }
 
-        <button className="btn btn-success mb-2" onClick={handleAddProduct}>Add Product</button>
-        <table className="table">
+        <button className="btn btn-success mb-2 btn-add-product " onClick={handleAddProduct}>Add Product</button>
+        <table className="table table-responsive">
           <thead>
             <tr className="table-success">
               <th scope="col">No</th>
@@ -85,7 +88,7 @@ import { Product } from "../types/product";
               <th scope="col">Price</th>
               <th scope="col">Description</th>
               <th scope="col">Picture</th>
-              <th scope="col">Action</th>
+              <th scope="col" className="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -103,10 +106,12 @@ import { Product } from "../types/product";
                 <td>{product.product_name}</td>
                 <td>{formatCurrency(product.price)}</td>
                 <td>{product.description}</td>
-                <td><img src={`${baseUrl}/storage/products/${product.image}`} alt="picture product" style={{width:'5vw'}} /></td>
+                <td><img src={`${baseUrl}/storage/products/${product.image}`} alt="picture product" className="img-products-list" /></td>
                 <td>
-                  <button className="btn btn-warning me-2" onClick={()=>handleEditProduct(product)}> <i className="bi bi-pencil"></i> </button>
-                  <button className="btn btn-danger" onClick={()=>handleActiveConfirmDelete(product.id)}> <i className="bi bi-trash"></i> </button>
+                  <div className="d-flex">
+                    <button className="btn btn-warning me-1 me-md-2 action-products-list" onClick={()=>handleEditProduct(product)}> <i className="bi bi-pencil"></i> </button>
+                    <button className="btn btn-danger action-products-list" onClick={()=>handleActiveConfirmDelete(product.id)}> <i className="bi bi-trash"></i> </button>
+                  </div>
                 </td>
               </tr>
             ))
@@ -118,6 +123,31 @@ import { Product } from "../types/product";
             }
           </tbody>
         </table>
+        {lastPage === 1 ? null : (<nav aria-label="Product pagination">
+                    <ul className="pagination justify-content-center">
+                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                            <a className="page-link"
+                                onClick={() => setPage((old)=> old - 1)}
+                                >
+                                    {"<"}
+                            </a>
+                        </li>
+                        {Array.from({length:lastPage}, (_, i)=>(
+                            <li key={i} onClick={()=>setPage(i+1)}>
+                                <a className={`px-2 page-link ${page === i+1 ? "font-bold underline" : ""}`}>
+                                    {i+1}
+                                </a>
+                            </li>
+                        ))}
+                        <li className={`page-item ${currentPage === lastPage ? "disabled" : ""}`}>
+                            <a className="page-link"
+                                onClick={()=> setPage((old)=> old + 1)}
+                                >
+                                {">"}
+                            </a>
+                        </li>
+                    </ul>
+        </nav>)}
       </div>
     );
   }

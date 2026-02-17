@@ -159,6 +159,11 @@
             padding-bottom: 2rem;
         }
 
+        
+        .img-products-list{
+            width: 5vw;
+        }
+
         .page-title {
             color: #00695c !important;
             font-weight: 600;
@@ -1418,9 +1423,36 @@
                 height: 500px;
                 overflow-y: scroll;
             }
+
+            /* Page Products */
+            .btn-add-product{
+                font-size: 10px;
+            }
+            .img-products-list{
+                width: 10vw;
+                height: 10vw;
+            }
+            .action-products-list{
+                font-size: 5px;
+                padding: 7px;
+            }
+
+            /* Form Product */
+            .form-product{
+                width: 75vw;
+                padding: 20px 20px;
+            }
         }
 
-        @media (max-width: 1024px) {
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .img-products-list{
+                width: 10vw;
+                height: 10vw;
+            }
+            .action-products-list{
+                font-size: 15px;
+                padding: 17px;
+            }
             .main-container {
                 grid-template-columns: 1fr;
                 gap: 20px;

@@ -112,7 +112,8 @@ const MaterialPage = () => {
             </div>
         </div>
          <div className="col-12 mt-3">
-                <nav aria-label="Product pagination">
+                {lastPage === 1 ? null : (
+                    <nav aria-label="Product pagination">
                     <ul className="pagination justify-content-center">
                         <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
                             <a className="page-link"
@@ -137,6 +138,7 @@ const MaterialPage = () => {
                         </li>
                     </ul>
                 </nav>
+                )}
             </div>
         
         </div>

@@ -5,8 +5,8 @@ import { getCsrfCookie } from "./csrf";
 
 
 // fething products
-const fetchProducts = async () => {
-  const response = await fetch(`${baseUrl}/api/products`,{
+const fetchProducts = async (page:number) => {
+  const response = await fetch(`${baseUrl}/api/products?page=${page}`,{
     credentials: 'include',
     headers: {
       'Accept': 'application/json',
@@ -19,10 +19,11 @@ const fetchProducts = async () => {
   return response.json();
 }
 
-export const useProducts = () => {  
+export const useProducts = (page?:number) => {  
+  const currentPage = page ?? 1;
   return useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
+    queryKey: ['products',currentPage],
+    queryFn: ()=>fetchProducts(currentPage),
   });
 }
 
