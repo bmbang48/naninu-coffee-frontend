@@ -125,7 +125,7 @@ const CashierPage = () => {
           return;
         }
 
-        const items = productsList.map((product) => ({
+        const items = productsList?.map((product) => ({
           product_id: product.id,
           quantity: product.qty,
           price: product.price,
@@ -179,9 +179,9 @@ const CashierPage = () => {
 
     const filteredList = productsList.filter(product => product.qty > 0);
     
-    const filteredProducts = (items ?? []).filter((p)=>
+    const filteredProducts = Array.isArray(items) ? (items ?? []).filter((p)=>
       p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ) : [];
 
 
   return (
@@ -216,7 +216,7 @@ const CashierPage = () => {
                   {
                     productsIsLoading ? (
                       <p>Loading...</p>
-                    ) : filteredProducts.map((product, index)=>(
+                    ) : filteredProducts?.map((product, index)=>(
                       
                       <div className="product-card d-flex flex-column justify-content-between bg-light"  key={index} >
                           <div className="product-image mb-2 mb-md-3 bg-light">

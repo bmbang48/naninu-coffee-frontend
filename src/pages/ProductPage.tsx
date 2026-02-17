@@ -101,7 +101,7 @@ import { Product } from "../types/product";
             {productsIsLoading ? ( <tr>
               <td>
                 Loading...
-                </td></tr> ) : items.data.map((product, index) => ( 
+                </td></tr> ) : items?.data?.map((product, index) => ( 
               <tr key={product.id}>
                 <td>{index + 1}</td>
                 <td>{product.product_name}</td>
