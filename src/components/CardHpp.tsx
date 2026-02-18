@@ -60,34 +60,34 @@ const CardHpp = ({product, recipes}:Props) => {
   // console.log(product, recipes);
   return (
     <>
-      <div className="card col-lg-3 product-card rounded-3 align-items-between justify-content-between shadow-sm h-100 p-0 pt-2 m-2">
         {isActiveConfirmDelete ? <ConfirmationAlert 
             isConfirm={isActiveConfirmDelete} 
             setIsConfirm={setIsActiveConfirmDelete}
             isConfirmDelete={isConfirmDelete}
             setIsConfirmDelete={setIsConfirmDelete}/> : null}
       {deleteIsLoading && <p>Deleting...</p>}
+      <div className="card col-lg-3 col-6 product-card rounded-3 align-items-between justify-content-between shadow-sm h-100 p-0 pt-2 m-0 ">
     
         <div className="product-image hpp d-flex justify-content-center w-100 bg-transparent pt-2 overflow-visible">
         <img src={`${baseUrl}/storage/products/${product.image}`} className="img-product-hpp" alt="..."/>
         </div>
-        <div className="card-body d-flex flex-column justify-content-between">
+        <div className="card-body d-flex flex-column justify-content-between ">
             <h5 className="card-title fw-bold" >{product.product_name}</h5>
-            <p className="card-text text-muted small">{product.description}</p>
-            <div className="stats-container">
+            <p className="card-text text-muted small mb-0">{product.description}</p>
+                        <div className="stats-container">
                             <div className="row text-center profit-card">
-                                <div className="col-lg-4 col-12 p-0 stat-item">
+                                <div className="col-4 p-0 stat-item">
                                     <div className="stat-label">Cost</div>
                                     <div className="stat-value cost-value">
                                         {formatCurrency(Math.round(totalHargaPokok))}</div>
                                 </div>
-                                <div className="col-lg-4 col-12 p-0 stat-item">
+                                <div className="col-4 p-0 stat-item">
                                     <div className="stat-label">Price</div>
                                     <div className="stat-value">
                                         {formatCurrency(Math.round(product.price))}
                                     </div>
                                 </div>
-                                <div className="col-lg-4 col-12 p-0 stat-item">
+                                <div className="col-4 p-0 stat-item">
                                     <div className="stat-label">Profit</div>
                                     <div className="stat-value profit-value">
                                       {formatCurrency(Math.round(keuntungan))}
@@ -96,10 +96,10 @@ const CardHpp = ({product, recipes}:Props) => {
                             </div>
                         </div>
               <div className="d-grid gap-2">
-                            <button className="btn btn-success btn-sm" onClick={() => handleShowRecipe()}>
+                            <button className="btn btn-success btn-sm btn-profit" onClick={() => handleShowRecipe()}>
                                 <i className="bi bi-pie-chart me-1"></i>Cost Details
                             </button>
-                            <button className="btn btn-danger btn-sm" onClick={()=>handleActiveConfirmDelete(product.id)}>
+                            <button className="btn btn-danger btn-sm btn-profit" onClick={()=>handleActiveConfirmDelete(product.id)}>
                                 <i className="bi bi-trash"></i>Delete Recipe
                             </button>
                         </div>

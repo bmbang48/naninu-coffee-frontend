@@ -140,11 +140,12 @@ const CardCost = ({product,recipes, isActiveShowRecipe, setIsActiveShowRecipe}:P
     
     return (
         <>
-        <main className="main-container position-absolute z-3 bg-light shadow-lg rounded-1 w-50">
-        <div className="container-fluid" style={{maxWidth: "1200px"}}>
-            <div className="d-flex justify-content-end align-items-end w-100 pe-3 pt-2">
+        
+        <main className="main-container card-cost bg-light shadow-lg rounded-1 ">
+            <div className="d-flex justify-content-end align-items-end w-100 pe-md-4">
                 <p className=" btn-x btn-x-material text-primary d-block" onClick={handleCloseForm}>X</p>
             </div>
+        <div className="container " style={{maxWidth: "1200px"}}>
             <header className="mb-4">
             <h1 className="display-6 fw-semibold mb-2 text-primary">Edit Product Cost</h1>
             <p className="text-muted mb-0 text-primary">Manage ingredients and calculate product costs</p>
@@ -177,7 +178,7 @@ const CardCost = ({product,recipes, isActiveShowRecipe, setIsActiveShowRecipe}:P
                 <th style={{width: "15%"}}>Quantity</th>
                 <th style={{width: "15%"}}>Unit</th>
                 <th style={{width: "15%"}}>Cost</th>
-                <th style={{width: "10%"}}></th>
+                <th style={{width: "15%"}}>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -206,10 +207,9 @@ const CardCost = ({product,recipes, isActiveShowRecipe, setIsActiveShowRecipe}:P
                         <td>
                             <span className="text-muted">{recipe.material?.unit|| "-"}</span>
                         </td>
-                        <td className="text-end"><span className="fw-semibold">{
-                        
+                        <td className="text-end"><span className="fw-semibold price">{
                         formatCurrency(Math.round(Number(recipe.amount_used) * (Number(recipe.material.price) / Number(recipe.material.amount))))}</span></td>
-                        <td>
+                        <td className="text-end">
                             <button className="btn btn-sm btn-outline-danger delete-btn" type="button" aria-label="Delete ingredient" onClick={()=>handleDeleteRecipes(index)}> 
                                 <i className="bi bi-trash"></i> 
                             </button>

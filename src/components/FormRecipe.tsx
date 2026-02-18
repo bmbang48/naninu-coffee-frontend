@@ -104,9 +104,10 @@ storeRecipe(payload);
                 </div>
             ))}
 
-            <button type="button" onClick={handleAddMaterial} className="btn btn-secondary mb-3">+ Tambah Material</button>
-            <br />
-            <button type="submit" className="btn btn-success w-75">Simpan</button>
+            <div className="d-flex flex-column align-items-center">
+                <button type="button" onClick={handleAddMaterial} className="btn btn-secondary  mb-3">+ Tambah Material</button>
+                <button type="submit" className="btn btn-success w-100">Simpan</button>
+            </div>
         </form>
         </div>
     );

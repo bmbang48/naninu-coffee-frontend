@@ -63,7 +63,8 @@
   color: #0e9080;
 } 
 .popup-confirmation{
-  position: absolute;
+  border-radius: 10px;
+  position: fixed;
   color: whitesmoke;
   padding: 3rem;
   top: 50%;
@@ -248,11 +249,17 @@
         }
 
         .product-card {
+            text-align: center;
             transition: all 0.2s ease;
             /* height: 50vh !important; */
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
+        .product-card .card-body .card-title{
+            text-align: center;
+            font-size: 1rem;
+        }
+        .product-card .ac
 
         .product-card:hover {
             transform: translateY(-4px);
@@ -437,7 +444,6 @@
         .product-description {
             font-size: clamp(9px, 2vw, 13px);
             color: #6b7280;
-            margin-bottom: 12px;
             line-height: 1.4;
         }
 
@@ -845,58 +851,21 @@
         }
 
         /* Card Cost */
-         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            /* display: none; */
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+         
+        .card-cost{
+            position: absolute;
+            z-index: 99;
+            width: 70%;
+            top: 180%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
+        .card-cost .container{
+            width: 75%;
         }
 
-        .modal {
-            background: white;
-            border-radius: 25px;
-            padding: 35px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90%;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 10px;
-            padding-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2d5016;
-            margin: 0;
-        }
+        
 
         .ingredients-table {
             width: 100%;
@@ -1419,9 +1388,75 @@
                 padding: 10px;
                 padding-top: 20px;
             }
+            .product-card .card-body .card-title{
+                font-size: 12px;
+            }
+            .product-card .card-body .card-text{
+                font-size: 10px;
+            }
+            .product-card .stats-container .profit-card .stat-item .stat-label{
+                font-size: 8px;
+            }
+            .product-card .stats-container .profit-card .stat-item .stat-value{
+                font-size: 8px;
+            }
+            .popup-confirmation{
+                width: 80%;
+                padding: 20px 20px;
+                font-size: 12px;
+            }
+            .popup-confirmation .modal-footer .btn{
+                margin-top: 10px;
+                font-size: 10px;
+            }
+            .popup-confirmation .modal-footer .btn-secondary{
+                margin-right: 7.5px;
+            }
+            .popup-confirmation .btn-x{
+                right: -5%;
+                transform: translate();
+            }
+            .stats-container{
+                margin-top: 5px;
+                margin-bottom: 8px;
+            }
             .products-section{
                 height: 500px;
                 overflow-y: scroll;
+            }
+            .card-cost{
+                width: 100%;
+                position: absolute;
+                /* margin: 0; */
+            }
+            .card-cost .container{
+                width: 100%;
+            }
+
+            .ingredient-row .form-select, .ingredient-row .form-control{
+                font-size: 9px;
+            }
+            .ingredient-row span.price{
+                font-size: 8px;
+            }
+            .ingredient-row td{
+                font-size: 8px;
+                padding: 5px;
+            }
+            .ingredient-table th {
+                padding: 5px 2px !important;
+                border-bottom: 1px solid #f0f0f0;
+                vertical-align: middle;
+                font-size: 2px;
+                text-align: center;
+            }
+            .ingredient-table td {
+                padding: 5px 2px !important;
+                border-bottom: 1px solid #f0f0f0;
+                vertical-align: middle;
+            }
+            .btn.btn-profit{
+                font-size: 10px;
             }
 
             /* Page Products */
@@ -1441,6 +1476,10 @@
             .form-product{
                 width: 75vw;
                 padding: 20px 20px;
+            }
+            .form-recipe{
+                width: 90vw;
+
             }
         }
 

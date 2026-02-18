@@ -96,7 +96,7 @@ const MaterialPage = () => {
                                 <td className="px-3 py-3" scope="col">{material.name}</td>
                                 <td className="px-3 py-3" scope="col">{formatCurrency(material.price)}</td>
                                 <td className="px-3 py-3" scope="col">{material.amount} {material.unit}</td>
-                                <td>
+                                <td className="d-flex py-3">
                                     <button className="btn btn-warning btn-sm me-2" onClick={()=>handleEditMaterial(material)}>
                                         <i className="bi bi-pencil"></i>
                                     </button>

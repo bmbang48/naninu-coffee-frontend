@@ -226,11 +226,9 @@ const CashierPage = () => {
                           <div className="product-description">{product.description}</div>
                           <div className="product-price">{formatCurrency(product.price)}</div>
                           <div className="button-action d-flex justify-content-between">
-                          <button className="add-btn" onClick={()=>handleAddProduct(product)}>
-                              <span>+</span>
+                          <button className="btn btn-secondary btn-delete" onClick={()=>handleLessProduct(product)}>
+                              <span>-</span>
                           </button>
-                          
-
                           {
                             (()=>{
                               const item = productsList.find(p=> p.id===product.id);
@@ -248,8 +246,8 @@ const CashierPage = () => {
                               ):null;
                             })()
                           }
-                          <button className="btn btn-secondary btn-delete" onClick={()=>handleLessProduct(product)}>
-                              <span>-</span>
+                          <button className="add-btn" onClick={()=>handleAddProduct(product)}>
+                              <span>+</span>
                           </button>
                           </div>
                       </div>

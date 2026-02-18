@@ -63,18 +63,20 @@ const groupedByProduct = useMemo<
                         <OtherCostPage/>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="container text-center d-flex flex-column justify-content-center align-items-start flex-wrap gap-3 mt-4">
+                <div className="row mt-3 mt-md-4">
+                    <div className="col-12">
                         { isActiveForm && <FormRecipe isActiveForm={isActiveForm} setIsActiveForm={setIsActiveForm} />}
                         <div className="title">
                             <button className="btn btn-success" onClick={handleForm}><i className="bi bi-plus-circle me-2"></i>Add Product Recipe</button>
                         </div>
-                        <div className="container  row justify-content-center align-items-start">
+                    </div>
+                    <div className="col-12 mt-3 ">
+                        <div className="d-flex flex-wrap justify-content-between">
                             { recipesError ? (<p>Oops, Terjadi Kesalahan pada recipe</p>) : recipesIsLoading ? (<p>Loading...</p>) : 
                             Object.values(groupedByProduct).map((group)=>(
                                 <CardHpp key={group.product.id} product={group.product} recipes={group.recipes}/>
                             ))
-                            }
+                        }
                         </div>
                     </div>
                 </div>

@@ -22,7 +22,7 @@ const ConfirmationAlert = ({isConfirm,setIsConfirm,isConfirmDelete, setIsConfirm
                 <div className="modal-content">
                 <div className="modal-header" data-bs-theme="dark">
                     <h5 className="modal-title" id="confirmModalLabel">Konfirmasi</h5>
-                    <p className="btn-x position-absolute top-0" onClick={handleCloseForm}>X</p>
+                    <p className="btn-x position-absolute " onClick={handleCloseForm}>X</p>
                 </div>
                 <div className="modal-body">
                     Are you sure you want to delete this ?
