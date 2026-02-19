@@ -6,16 +6,25 @@ import { formatCurrency } from "../components/FormatCurrency";
 import { unformatCurrency } from "../components/FormatCurrency";
 import { useStoreTransaction } from "../api/useTransaction";
 import { useReactToPrint } from "react-to-print";
+import FormOnlineOrder from "../components/FormOnlineOrder";
 
 const CashierPage = () => {
   const [page, setPage] = useState(1)
-  const {data: products, isLoading:productsIsLoading, error: productsError} = useProductsCashier(page);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(()=>{
+    const handler = setTimeout(()=>{
+      setDebouncedSearch(searchTerm);
+      setPage(1); 
+    },500)
+    return () => clearTimeout(handler);
+  },[searchTerm]);
+  const {data: products, isLoading:productsIsLoading, error: productsError} = useProductsCashier(page,debouncedSearch);
       // console.log(products);
       // productsIsLoading ? console.log('Loading...') : console.log(products.data);
-      const items = products?.data??[];
-      console.log('ini Items', items);
-      const currentPage = products?.current_page ?? 1;
-      const lastPage = products?.last_page ?? 1;
+      const items = products?.data?.data??[];
+      const currentPage = products?.data?.current_page ?? 1;
+      const lastPage = products?.data?.last_page ?? 1;
   
       type Product = {
         id: number;
@@ -36,7 +45,11 @@ const CashierPage = () => {
       const [isSuccess,setIsSuccess] = useState(false);
       const [isSave,setIsSave] = useState(false);
 
-      const [searchTerm, setSearchTerm] = useState("");
+      const [isOfflineOrder, setIsOfflineOrder] = useState(false);
+      const [isCash, setIsCash] = useState(false);
+      const [isOnlineOrder, setIsOnlineOrder] = useState(false);
+      const [orderMethod, setOrderMethod] = useState("");
+
       useEffect(() => {
         console.log("productsList Updated:", productsList);
         
@@ -182,6 +195,11 @@ const CashierPage = () => {
     const filteredProducts = Array.isArray(items) ? (items ?? []).filter((p)=>
       p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
     ) : [];
+
+    const handleOnlineForm = (order_method)=>{
+      setIsOnlineOrder(!isOnlineOrder);
+      setOrderMethod(order_method);
+    }
 
 
   return (
@@ -339,7 +357,22 @@ const CashierPage = () => {
                 </div>
 
                 <div style={{flexShrink: 0}}>
-                    <div className="summary">
+                    <div className="methode-section">
+                      <div className="summary-row fw-semibold fs-6" style={{color: "#2d5a3d"}}>
+                        <span>Metode Pesanan</span>
+                      </div>
+                      <div className="order-method d-flex justify-content-evenly py-3 flex-wrap " >
+                        <div className="w-100 d-flex">
+                        <button className="btn btn-warning btn-shopeefood flex-fill" onClick={()=>handleOnlineForm("ShopeeFood")}>ShopeeFood</button>
+                        <button className="btn btn-primary btn-grabfood flex-fill" onClick={()=>handleOnlineForm("GrabFood")}>GrabFood</button>
+                        <button className="btn btn-danger btn-gofood flex-fill" onClick={()=>handleOnlineForm("GoFood")}>GoFood</button>
+                        </div>
+                        <div className="w-100 mt-2 mt-md-3">
+                        <button className={`btn btn-secondary w-100 ${isOfflineOrder ? " active" : ""}`} onClick={()=>setIsOfflineOrder(!isOfflineOrder)}>Offline Order</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`summary ${isOfflineOrder ? "" : "d-none"}`}>
                         <div className="summary-row">
                             <span>Subtotal:</span>
                             <span id="subtotal">{formatCurrency(subtotal)}</span>
@@ -359,9 +392,12 @@ const CashierPage = () => {
                             <span id="total">{formatCurrency(subtotal+tax-diskon)}</span>
                         </div>
                     </div>
-
-                    <div className="payment-section">
-                        <div className="input-group">
+                    <div className={`payment-section ${isOfflineOrder ? "" : "d-none"}`}>
+                        <div className="payment-method d-flex">
+                          <button className="btn btn-success flex-fill" onClick={()=>setIsCash(!isCash)}>Cash</button>
+                          <button className="btn btn-danger flex-fill">Qris</button>
+                        </div>
+                        <div className={`input-group ${isCash ? " " : "d-none"}`}>
                             <label className="input-label">Jumlah Bayar</label>
                             <input type="text" className="input-field" id="paymentAmount" placeholder="Rp. xxx.xxx" onChange={
                               (e)=> {
@@ -370,13 +406,12 @@ const CashierPage = () => {
                             } }
                             value={formatCurrency(bayar)} />
                         </div>
-                        <div className="summary-row" style={{marginTop: "12px", fontWeight: "600", color: "#2d5a3d"}}>
+                        <div className={`summary-row ${isCash ? " " : "d-none"}`} style={{marginTop: "12px", fontWeight: "600", color: "#2d5a3d"}}>
                             <span>Kembalian:</span>
                             <span id="change">{formatCurrency(kembalian)}</span>
                         </div>
                     </div>
-                
-                    <div className="action-buttons">
+                    <div className={`action-buttons ${isOfflineOrder ? "" : "d-none"}`}>
                         <button className="primary-btn" onClick={()=>{
                               handleBayar(subtotal+tax-diskon, bayar);
                               saveOrder()}}>
@@ -391,6 +426,12 @@ const CashierPage = () => {
                     </div>
                 </div>
               </div>
+
+              {/* Online Order Form */}
+              {isOnlineOrder ? (
+                <FormOnlineOrder isActiveForm={isOnlineOrder} setIsActiveForm={setIsOnlineOrder} total_price={total} order_method={orderMethod}/>
+              ) : null}
+
               {/* ====== STRUK CETAK (HIDDEN) ====== */}
 <div style={{ display: "none" }}>
   <div ref={printRef} className="print-receipt">

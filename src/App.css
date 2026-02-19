@@ -345,6 +345,18 @@
 
 
         /* Cashier */
+        .btn-warning.btn-shopeefood{
+            color: whitesmoke;
+            background-color: rgb(255, 128, 0) !important;
+        }
+        .btn-primary.btn-grabfood{
+            color: whitesmoke;
+            background-color: rgb(6, 127, 6) !important;
+        }
+        .btn-danger.btn-gofood{
+            color: whitesmoke;
+            background-color: rgb(230, 8, 8) Im !important;
+        }
         .products-section {
             background: white;
             border-radius: 16px;
@@ -1538,7 +1550,7 @@
                 width: 100%;
             }
             .products-grid{
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             }
         }
 

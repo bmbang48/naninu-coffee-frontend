@@ -27,8 +27,14 @@ export const useProducts = (page?:number) => {
   });
 }
 
-const fetchProductsCashier = async(page:number)=>{
-  const response = await fetch(`${baseUrl}/api/products-cashier?page=${page}`, {
+const fetchProductsCashier = async(page:number, search: string="")=>{
+  const params = new URLSearchParams({
+    page: page.toString(),
+    search: search
+  });
+
+
+  const response = await fetch(`${baseUrl}/api/products-cashier?${params.toString()}`, {
     credentials: 'include',
     headers: {
       accept: 'application/json',
@@ -38,16 +44,18 @@ const fetchProductsCashier = async(page:number)=>{
   if(!response.ok){
     throw new Error("Failed to fetch products cashier");
   }
+  
   const json = await response.json();
-  return json.data ?? [];
+  console.log(json);
+  return json ?? [];
 }
 
 
-export const useProductsCashier = (page?:number)=>{
-  const currentPage = page ?? 1;
+export const useProductsCashier = (page:number = 1, search:string = "")=>{
   return useQuery({
-    queryKey: ['products', currentPage],
-    queryFn: ()=>fetchProductsCashier(currentPage)
+    queryKey: ['products', page, search],
+    queryFn: ()=>fetchProductsCashier(page, search),
+    placeholderData: (previousData) => previousData,
   });
 }
 
