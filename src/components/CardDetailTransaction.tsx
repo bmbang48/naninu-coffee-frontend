@@ -65,7 +65,7 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                             <thead>
                                 <tr>
                                     <th>Order Number</th>
-                                    <th>Product List</th>
+                                    <th className="text-center text-md-start">Product List</th>
                                     <th className="text-center">Total Items</th>
                                     <th className="text-end">Total Price</th>
                                     <th className="text-center">Option</th>

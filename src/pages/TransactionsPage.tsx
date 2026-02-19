@@ -94,7 +94,7 @@ const TransactionsPage = ()=>{
 
 
     return(
-        <>
+        <div className="overflow-x-hidden">
             <div className="page-header">
                             <h1 className="page-title">Transactions Page</h1>
                 <div className="container-fluid px-4 row">
@@ -136,13 +136,13 @@ const TransactionsPage = ()=>{
                             <table className="custom-table">
                                 <thead>
                                     <tr>
-                                        <th style={{width: '50px'}}>No</th>
-                                        <th style={{width: '140px'}}>Date</th>
-                                        <th className="text-center" style={{width: '110px'}}>Total Orders</th>
-                                        <th className="text-center" style={{width: '110px'}}>Total Items</th>
-                                        <th style={{minWidth: '400px'}}>Products Summary</th>
-                                        <th className="text-end" style={{width: '160px'}}>Total Price</th>
-                                        <th className="text-center" style={{width: '110px'}}>Options</th>
+                                        <th className="text-center">No</th>
+                                        <th className="text-center text-md-start">Date</th>
+                                        <th className="text-center" >Total Orders</th>
+                                        <th className="text-center" >Total Items</th>
+                                        <th className="head-products-summary">Products Summary</th>
+                                        <th className="text-end">Total Price</th>
+                                        <th className="text-center">Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -158,8 +158,8 @@ console.log("Data Product Summary: ", productSummary)
 
                                        return (
                                         <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>
+                                            <td className="text-center">{index + 1}</td>
+                                            <td className="ps-2 ps-md-3">
                                                 <div className="date-cell">{formatLocalDate(date)}</div>
                                                 <span className="day-name">{getDayName(date)}</span>
                                             </td>
@@ -167,7 +167,7 @@ console.log("Data Product Summary: ", productSummary)
                                             <td className="text-center">{
                                                 transaction.reduce((sum,t)=> sum + t.items.length,0)
                                                 } Items</td>
-                                            <td>
+                                            <td className="td-products-summary">
                                                 <div className="product-summary">
                                                     {
                                                         Object.entries(productSummary).map(([name,qty])=>(
@@ -196,8 +196,8 @@ console.log("Data Product Summary: ", productSummary)
                     </div>
 
                     <div className="summary-section">
-                        <div className="row g-3">
-                            <div className="col-md-4">
+                        <div className="row g-md-3 g-0">
+                            <div className="col-4">
                                 <div className="summary-card">
                                     <div className="summary-label">Total Revenue This Month</div>
                                     <div className="summary-value">{formatCurrency(
@@ -206,7 +206,7 @@ console.log("Data Product Summary: ", productSummary)
                                     <div className="summary-hint">Sum of all daily revenues</div>
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-4">
                                 <div className="summary-card">
                                     <div className="summary-label">Total Orders</div>
                                     <div className="summary-value">{
@@ -215,7 +215,7 @@ console.log("Data Product Summary: ", productSummary)
                                     <div className="summary-hint">Completed transactions this month</div>
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-4">
                                 <div className="summary-card">
                                     <div className="summary-label">Total Products Sold</div>
                                     <div className="summary-value">
@@ -233,7 +233,7 @@ console.log("Data Product Summary: ", productSummary)
                         <CardDetailTransaction 
                         selectedDay={selectedDay} 
                         onClose={()=>setSelectedDay(null)}></CardDetailTransaction>
-        </>
+        </div>
     )
 }
 

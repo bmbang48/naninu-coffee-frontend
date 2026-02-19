@@ -218,37 +218,37 @@ const CashierPage = () => {
                       <p>Loading...</p>
                     ) : filteredProducts?.map((product, index)=>(
                       
-                      <div className="product-card d-flex flex-column justify-content-between bg-light"  key={index} >
+                      <div className="product-card d-flex flex-column justify-content-between bg-light pt-0"  key={index} >
                           <div className="product-image mb-2 mb-md-3 bg-light">
                             <img src={`${baseUrl}/storage/products/${product.image}`} alt="picture product" className="img-product-cashier"/>
                           </div>
                           <div className="product-name ">{product.product_name}</div>
                           <div className="product-description">{product.description}</div>
                           <div className="product-price">{formatCurrency(product.price)}</div>
-                          <div className="button-action d-flex justify-content-between">
-                          <button className="btn btn-secondary btn-delete" onClick={()=>handleLessProduct(product)}>
-                              <span>-</span>
-                          </button>
-                          {
-                            (()=>{
-                              const item = productsList.find(p=> p.id===product.id);
-                              return item ? (
-                                <input 
-                                  type="number"
-                                  className="form-control"
-                                  value={item.qty}
-                                  onChange={(e)=>{
-                                    const updated = productsList.map(p =>
-                                      p.id === product.id ? {...p, qty: Number(e.target.value)} : p
-                                    );
-                                    setProductsList(updated);
-                                  }} />
-                              ):null;
-                            })()
-                          }
-                          <button className="add-btn" onClick={()=>handleAddProduct(product)}>
-                              <span>+</span>
-                          </button>
+                          <div className="button-action d-flex justify-content-around px-1 px-md-3 pb-4">
+                            <button className="btn btn-secondary btn-delete me-0" onClick={()=>handleLessProduct(product)}>
+                                <span>-</span>
+                            </button>
+                            {
+                              (()=>{
+                                const item = productsList.find(p=> p.id===product.id);
+                                return item ? (
+                                  <input 
+                                    type="number"
+                                    className="form-control w-50 py-0"
+                                    value={item.qty}
+                                    onChange={(e)=>{
+                                      const updated = productsList.map(p =>
+                                        p.id === product.id ? {...p, qty: Number(e.target.value)} : p
+                                      );
+                                      setProductsList(updated);
+                                    }} />
+                                ):null;
+                              })()
+                            }
+                            <button className="add-btn ms-0" onClick={()=>handleAddProduct(product)}>
+                                <span>+</span>
+                            </button>
                           </div>
                       </div>
                     ))

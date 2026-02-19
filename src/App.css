@@ -259,7 +259,6 @@
             text-align: center;
             font-size: 1rem;
         }
-        .product-card .ac
 
         .product-card:hover {
             transform: translateY(-4px);
@@ -267,18 +266,20 @@
         }
 
         .product-image {
-            max-height: 100px;
+            /* max-height: 100px; */
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding-top: 0px;
 
             background: #000;
             /* border-radius: 0.5rem 0.5rem 0 0; */
         }
         .product-image img{
             width: 100%;
+            max-height: 100px;
             /* border-radius: 100%; */
         }
 
@@ -394,7 +395,7 @@
         .product-card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 2px;
             border: 1px solid rgba(45, 90, 61, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
@@ -428,8 +429,12 @@
             border-radius: 100%;
         }
 
+        .product-image {
+            /* background-color: red; */
+            padding-top: 30px;
+        }
         .product-image .img-product-cashier{
-            width: 100px !important;
+            width: 80% !important;
             height: 100px !important;
             border-radius: 10%;
         }
@@ -1458,6 +1463,9 @@
             .btn.btn-profit{
                 font-size: 10px;
             }
+            .button-action{
+                width: 100%;
+            }
 
             /* Page Products */
             .btn-add-product{
@@ -1481,6 +1489,57 @@
                 width: 90vw;
 
             }
+
+            /* Transactions */
+            .table-card .custom-table, .table-card .date-cell, .table-card .day-name, .table-card .product-tag, .table-card .total-price{
+                font-size: 9px;
+            }
+
+            .product-summary{
+                gap: 0.1rem;
+            }
+
+            .td-products-summary, th.head-products-summary{
+                display: none;
+            }
+
+            .table-card .product-card{
+                margin: 0;
+                padding: 0;
+            }
+            .btn-details{
+                font-size: 9px;
+                padding: 2px 8px;
+            }
+            .custom-table thead th, .custom-table tbody td{
+                padding: 8px 0;
+            }
+            .custom-table thead th{
+                padding: 8px 0;
+            }
+
+            .summary-section .summary-card{
+                padding: 10px;
+                height: 100px;
+            }
+
+            .summary-section .summary-card .summary-label, .popup-card .custom-table, .popup-card .custom-table .order-number,
+            .popup-card .custom-table .product-tag, .popup-card .custom-table .total-price, .popup-card .custom-table .btn-sm{
+                font-size: 9px;
+            }
+
+            .summary-section .summary-card .summary-value{
+                font-size: 12px;
+            }
+            .summary-section .summary-card .summary-hint{
+                font-size: 7px;
+            }
+            .popup-card{
+                width: 100%;
+            }
+            .products-grid{
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
         }
 
         @media (min-width: 768px) and (max-width: 1024px) {
@@ -1503,5 +1562,14 @@
             
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .card-cost{
+                /* width: 100%; */
+                position: absolute;
+                top: 100%;
+                /* margin: 0; */
+            }
+            .card-cost .container{
+                width: 90%;
             }
         }
