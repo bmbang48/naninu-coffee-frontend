@@ -10,6 +10,8 @@ interface Transaction{
     customer_name: string ;
     pay: number;
     total_price: number;
+    order_method:string;
+    payment_method:string;
     transaction_code: string;
     transaction_date: string;
     items: Item[];
@@ -141,6 +143,7 @@ const TransactionsPage = ()=>{
                                         <th className="text-center" >Total Orders</th>
                                         <th className="text-center" >Total Items</th>
                                         <th className="head-products-summary">Products Summary</th>
+                                        <th className="text-center">Payment Method</th>
                                         <th className="text-end">Total Price</th>
                                         <th className="text-center">Options</th>
                                     </tr>
@@ -154,7 +157,13 @@ const TransactionsPage = ()=>{
                                         ) : 
                                         Object.entries(groupedTransacitons).map(([date,transaction],index)=>{
                                             const productSummary = getDailyProductSummary(transaction)
-console.log("Data Product Summary: ", productSummary)
+// console.log("Data Product Summary: ", productSummary)
+                                            const paymentSummary = transaction.reduce((acc,t)=>{
+                                                const method = t.order_method || "Offline";
+                                                acc[method] = (acc[method] || 0) + 1;
+                                                return acc;
+                                            },{})
+                                        // console.log(transaction);
 
                                        return (
                                         <tr key={index}>
@@ -178,6 +187,21 @@ console.log("Data Product Summary: ", productSummary)
                                                         ))
                                                     }
                                                 </div>
+                                            </td>
+                                            <td className="text-center">
+                                               {
+                                                Object.entries(paymentSummary).map(([method,count])=>(
+                                                    <span key={method} className={`badge 
+                                                    ${method === "ShopeeFood" ? "btn-warning btn-shopeefood" : 
+                                                                            method === "GrabFood" ? "btn-primary btn-grabfood" :
+                                                                            method === "GoFood" ? "btn btn-danger btn-gofood" :
+                                                                            method === "Offline" ? "btn btn-secondary" :
+                                                                            method === "QRIS" ? "badge-dark" : ""
+                                                                        }`} style={{ fontSize: '10px' }}>
+                                                        {method} ({count as number})
+                                                    </span>
+                                                ))
+                                               }
                                             </td>
                                             <td className="text-end total-price">
                                                 {

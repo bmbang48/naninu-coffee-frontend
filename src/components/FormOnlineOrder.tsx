@@ -6,8 +6,9 @@ interface Props{
     setIsActiveForm: (isActiveForm:boolean)=> void,
     total_price: number,
     order_method:string,
+    onSave: (newPrice : number,  newMethod:string)=>void,
 }
-const FormOnlineOrder = ({isActiveForm,setIsActiveForm,total_price,order_method}:Props)=>{
+const FormOnlineOrder = ({isActiveForm,setIsActiveForm,total_price ,order_method,onSave}:Props)=>{
     const handleCloseForm = () => {
         setIsActiveForm(!isActiveForm);
     }
@@ -15,8 +16,12 @@ const FormOnlineOrder = ({isActiveForm,setIsActiveForm,total_price,order_method}
     const [totalPrice,setTotalPrice] = useState(total_price);
     const [orderMethod,setOrderMethod] = useState(order_method);
 
-    const handleSubmit = ()=>{
+    const handleSubmit = (e: React.FormEvent)=>{
+        e.preventDefault();
+
+        onSave(totalPrice,orderMethod);
         setOrderMethod(orderMethod);
+        setIsActiveForm(!isActiveForm);
     }
     return (
         <div className="form-other-cost d-flex flex-column justify-content-center align-items-center ">

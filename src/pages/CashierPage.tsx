@@ -49,6 +49,7 @@ const CashierPage = () => {
       const [isCash, setIsCash] = useState(false);
       const [isOnlineOrder, setIsOnlineOrder] = useState(false);
       const [orderMethod, setOrderMethod] = useState("");
+      const [paymentMethod, setPaymentMethod] = useState("");
 
       useEffect(() => {
         console.log("productsList Updated:", productsList);
@@ -124,7 +125,7 @@ const CashierPage = () => {
         }
       }
 
-      const saveOrder = () => {
+      const saveOrder = (newPrice? :number, newMethod? : string) => {
         if(productsList.length === 0){
           alert("Belum ada produk yang dipilih");
           return;
@@ -144,17 +145,24 @@ const CashierPage = () => {
           price: product.price,
           subtotal: product.qty * product.price,
         }));
+        if(newPrice){
+          setTotal(newPrice)
+          setOrderMethod(newMethod)
+        }
         const payload = {
             transaction_code : transaction_code,
             transaction_date : new Date().toISOString().split('T')[0],
             customer_name : customerName,
             discount: diskon,
-            total_price : total,
-            pay : Number(bayar),
+            total_price : newPrice ? newPrice : subtotal,
+            pay : newPrice ? newPrice : Number(bayar),
             change : kembalian, 
             items : items,
             tax : tax,
+            order_method: newMethod ? newMethod : "Offline",
+            payment_method: newMethod ? newMethod : paymentMethod
           };
+      console.log(payload);
       storeTransaction(payload, {
         onSuccess: (data) => {
           console.log("Transaction saved successfully:", data);
@@ -163,6 +171,8 @@ const CashierPage = () => {
           setSubtotal(0);
           setProductsList([]);
           setDiskon(0);
+          setOrderMethod("");
+          setPaymentMethod("");
           setBayar(0);
           setKembalian(0);
           setIsSave(!isSave);
@@ -199,7 +209,8 @@ const CashierPage = () => {
     const handleOnlineForm = (order_method)=>{
       setIsOnlineOrder(!isOnlineOrder);
       setOrderMethod(order_method);
-    }
+    } 
+
 
 
   return (
@@ -363,7 +374,7 @@ const CashierPage = () => {
                       </div>
                       <div className="order-method d-flex justify-content-evenly py-3 flex-wrap " >
                         <div className="w-100 d-flex">
-                        <button className="btn btn-warning btn-shopeefood flex-fill" onClick={()=>handleOnlineForm("ShopeeFood")}>ShopeeFood</button>
+                        <button className={`btn btn-warning btn-shopeefood flex-fill`}  onClick={()=>handleOnlineForm("ShopeeFood")} disabled={orderMethod !== ""}  >ShopeeFood</button>
                         <button className="btn btn-primary btn-grabfood flex-fill" onClick={()=>handleOnlineForm("GrabFood")}>GrabFood</button>
                         <button className="btn btn-danger btn-gofood flex-fill" onClick={()=>handleOnlineForm("GoFood")}>GoFood</button>
                         </div>
@@ -394,8 +405,8 @@ const CashierPage = () => {
                     </div>
                     <div className={`payment-section ${isOfflineOrder ? "" : "d-none"}`}>
                         <div className="payment-method d-flex">
-                          <button className="btn btn-success flex-fill" onClick={()=>setIsCash(!isCash)}>Cash</button>
-                          <button className="btn btn-danger flex-fill">Qris</button>
+                          <button className="btn btn-success flex-fill" onClick={()=>{setIsCash(!isCash);setPaymentMethod("Cash")}}>Cash</button>
+                          <button className="btn btn-danger flex-fill" onClick={()=>{setPaymentMethod("QRIS"); setBayar(subtotal)}}>Qris</button>
                         </div>
                         <div className={`input-group ${isCash ? " " : "d-none"}`}>
                             <label className="input-label">Jumlah Bayar</label>
@@ -429,7 +440,7 @@ const CashierPage = () => {
 
               {/* Online Order Form */}
               {isOnlineOrder ? (
-                <FormOnlineOrder isActiveForm={isOnlineOrder} setIsActiveForm={setIsOnlineOrder} total_price={total} order_method={orderMethod}/>
+                <FormOnlineOrder isActiveForm={isOnlineOrder} setIsActiveForm={setIsOnlineOrder} total_price={subtotal} order_method={orderMethod} onSave={saveOrder}/>
               ) : null}
 
               {/* ====== STRUK CETAK (HIDDEN) ====== */}

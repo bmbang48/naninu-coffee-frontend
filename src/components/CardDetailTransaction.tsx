@@ -3,6 +3,14 @@ import { formatCurrency, formatLocalDate } from "./FormatCurrency";
 import { getDayName } from "../api/getDate";
 import { useDeleteTransaction } from "../api/useTransaction";
 import ConfirmationAlert from "../components/ConfirmationAlert";
+interface MethodStats {
+    totalRevenue:number;
+    totalQty:number;
+}
+
+interface StatsAccumulator{
+    [key:string]: MethodStats;
+}
 const CardDetailTransaction = ({selectedDay,onClose})=>{
     const [isExpanded, setIsExpanded] = useState(true);
     
@@ -24,14 +32,25 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
     const {date,transaction} = selectedDay;
 
     const dailyRevenue = transaction.reduce(
-        (sum,t) => sum + t.items.reduce((s,item)=>s+item.subtotal, 0),
-        0
-    );
+        (sum,t) => sum + (t.total_price || 0 ), 0);
 
     const handleActiveDelete = (id:number) => {
       setId(id);
       setIstActiveConfirmDelete(!isActiveConfirmDelete); 
     }
+
+    const revenueByMethod = transaction.reduce((acc: StatsAccumulator, t)=> {
+        const amount = t.total_price || 0;
+        const method = t.payment_method;
+        const totalQtyInTransaction = t.items.reduce((sum,item)=>sum + item.quantity,0);
+
+        if(!acc[method]){
+            acc[method] = {totalRevenue : 0, totalQty: 0};
+        }
+        acc[method].totalRevenue += amount;
+        acc[method].totalQty += totalQtyInTransaction;
+        return acc;
+    },{} as StatsAccumulator);
     
     
 
@@ -47,6 +66,19 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                         {transaction.length} • {formatCurrency(dailyRevenue)} revenue
                         </p>
                     </div>
+                    {(Object.entries(revenueByMethod) as [string,MethodStats][]).map(([method, stats])=>(
+                        <div key={method}>
+                            <p className="day-date">
+                                {method}
+                            </p>
+                            <p className="day-stats">
+                                {formatCurrency(stats.totalRevenue)}
+                            </p>
+                            <p className="day-stats">
+                                {stats.totalQty} Items
+                            </p>
+                        </div>
+                    ))}
                     <span className="expand-icon fw-bold cursor-pointer" style={{ cursor: "pointer" }} onClick={onClose}>
                             X
                     </span>
@@ -67,6 +99,7 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                                     <th>Order Number</th>
                                     <th className="text-center text-md-start">Product List</th>
                                     <th className="text-center">Total Items</th>
+                                    <th className="text-center">Payment Method</th>
                                     <th className="text-end">Total Price</th>
                                     <th className="text-center">Option</th>
                                 </tr>
@@ -74,7 +107,6 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                             <tbody>
                                 {transaction.map((t)=>{
                                     const totalItems = t.items.reduce((sum,i)=> sum + i.quantity,0);
-                                    const totalPrice = t.items.reduce((sum,i)=> sum + i.subtotal,0);
 
                                     return(
                                         <tr key={t.id}>
@@ -89,8 +121,16 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                                                 </div>
                                             </td>
                                             <td className="text-center">{totalItems}</td>
+                                            <td className="text-center"><span className={`btn btn-sm  
+                                                                        ${t.payment_method === "ShopeeFood" ? "btn-warning btn-shopeefood" : 
+                                                                            t.payment_method === "GrabFood" ? "btn-primary btn-grabfood" :
+                                                                            t.payment_method === "GoFood" ? "btn-danger btn-gofood" :
+                                                                            t.payment_method === "Cash" ? "btn-secondary" :
+                                                                            t.payment_method === "QRIS" ? "btn-dark" : ""
+                                                                        }
+                                                                        `}>{t.payment_method}</span></td>
                                             <td className="text-end total-price">
-                                            {formatCurrency(totalPrice)}
+                                            {formatCurrency(t.total_price)}
                                             </td>
                                             <td className="text-center">
                                             <button className="btn btn-sm btn-outline-danger ms-3" onClick={()=>handleActiveDelete(t.id)}>
