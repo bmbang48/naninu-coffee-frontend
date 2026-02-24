@@ -74,9 +74,10 @@ const Navbar = () => {
         </div>
     </nav>
             {user && 
-            <div className="d-flex justify-content-end pe-md-5 pt-md-1  ">
+            <p className="text-white text-end w-100 pe-md-5 pe-2 position-absolute z-3">
                 Welcome, {user.name}
-            </div>}
+            </p> 
+            }
   </>);
 }
 export default Navbar;

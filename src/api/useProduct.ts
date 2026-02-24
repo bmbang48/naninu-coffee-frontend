@@ -3,6 +3,29 @@ import { baseUrl } from "./baseUrl";
 import { getCsrfCookie } from "./csrf";
 // React fetch
 
+const fetchAllProducts = async ()=>{
+  const response = await fetch(`${baseUrl}/api/products-all`,{
+    credentials: 'include',
+    headers: {
+      'Accept': 'application/json',
+    }
+  });
+  if(!response.ok){
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await response.json();
+  return data?? [];
+}
+
+export const useAllProducts = () => {  
+  return useQuery({
+    queryKey: ['all-products'],
+    queryFn: fetchAllProducts,
+  });
+}
+
+
 
 // fething products
 const fetchProducts = async (page:number) => {
@@ -12,7 +35,7 @@ const fetchProducts = async (page:number) => {
       'Accept': 'application/json',
     }
   });
-  console.log(baseUrl);
+  // console.log(baseUrl);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }

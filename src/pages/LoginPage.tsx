@@ -55,11 +55,12 @@ const LoginPage = ()=>{
                 </svg><input type="password" className="form-control" placeholder="Masukkan password" onChange={(e)=>setPassword(e.target.value)} required/>
                 </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center mb-1" ><label className="checkbox-wrapper"> <input type="checkbox"/> <span>Ingat saya</span> </label> <a href="#" className="forgot-link">Lupa Password?</a>
-                </div><button type="submit" className="btn-login">Masuk</button>
+                {/* <div className="d-flex justify-content-between align-items-center mb-1" ><label className="checkbox-wrapper"> <input type="checkbox"/> <span>Ingat saya</span> </label> <a href="#" className="forgot-link">Lupa Password?</a> */}
+                {/* </div> */}
+                <button type="submit" className="btn-login">Masuk</button>
                 </form>
                 <div className="divider">
-                © 2024 Naninu Coffee
+                © 2025 Naninu Coffee
                 </div>
             </div>
         </div>

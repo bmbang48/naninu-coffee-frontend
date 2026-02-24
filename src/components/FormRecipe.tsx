@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useStoreRecipe } from "../api/useRecipe";
-import { useProducts } from "../api/useProduct";
+import { useAllProducts } from "../api/useProduct";
 import { useAllMaterials } from "../api/useMaterial";
 import { Product } from "../types/product";
 import { Material } from "../types/material";
@@ -16,8 +16,9 @@ const RecipeForm = ({ isActiveForm, setIsActiveForm} : Props) => {
     const [selectedProduct, setSelectedProduct] = useState("");
     const [selectedMaterials, setSelectedMaterials] = useState([{ id_material: "", amount_used: "" }]);
 
-    const {data: dataProducts, isLoading:productsIsLoading, error: productsError} = useProducts();
-    const listProduct = dataProducts?.data??[];
+    const {data: dataProducts, isLoading:productsIsLoading, error: productsError} = useAllProducts();
+    const listProduct = dataProducts??[];
+    console.log(listProduct);
 
     const {data: dataMaterials, isPending:materialsIsLoading, error: materialsError} = useAllMaterials();
 
