@@ -5,6 +5,15 @@ import {getDayName} from "../api/getDate";
 import CardDetailTransaction from "../components/CardDetailTransaction";
 import { Product } from "../types/product";
 
+interface MethodStats {
+    totalRevenue:number;
+    totalOrders:number;
+}
+
+interface StatsAccumulator{
+    [key:string]: MethodStats;
+}
+
 interface Transaction{
     id: number;
     customer_name: string ;
@@ -92,8 +101,38 @@ const TransactionsPage = ()=>{
 
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
 
-    
+    const monthlyPaymentSummary =filteredDataMonth.reduce((acc: StatsAccumulator,t)=>{
+        const method = t.payment_method || "cash";
 
+        if(!acc[method]){
+            acc[method]={
+                totalOrders:0,
+                totalRevenue:0
+            };
+        }
+
+        acc[method].totalOrders += 1;
+        acc[method].totalRevenue += sumTransaction(t);
+        
+        return acc;
+    }, {} as StatsAccumulator);
+
+
+    const productSoldByPayment = filteredDataMonth.reduce((acc,t)=>{
+        const method = t.payment_method || "Cash";
+
+        if(!acc[method]){
+            acc[method] = 0;
+        }
+
+        const totalQtyInTransaction = t.items.reduce(
+            (sum,item)=> sum + Number(item.quantity),0
+        );
+
+        acc[method] += totalQtyInTransaction;
+
+        return acc;
+    }, {} as Record<string, Record<string, number>>);
 
     return(
         <div className="overflow-x-hidden">
@@ -143,7 +182,7 @@ const TransactionsPage = ()=>{
                                         <th className="text-center" >Total Orders</th>
                                         <th className="text-center" >Total Items</th>
                                         <th className="head-products-summary">Products Summary</th>
-                                        <th className="text-center">Payment Method</th>
+                                        <th className="text-center pe-5 d-none d-md-block">Payment</th>
                                         <th className="text-end">Total Price</th>
                                         <th className="text-center">Options</th>
                                     </tr>
@@ -159,7 +198,7 @@ const TransactionsPage = ()=>{
                                             const productSummary = getDailyProductSummary(transaction)
 // console.log("Data Product Summary: ", productSummary)
                                             const paymentSummary = transaction.reduce((acc,t)=>{
-                                                const method = t.order_method || "Offline";
+                                                const method = t.payment_method || "Cash";
                                                 acc[method] = (acc[method] || 0) + 1;
                                                 return acc;
                                             },{})
@@ -188,15 +227,15 @@ const TransactionsPage = ()=>{
                                                     }
                                                 </div>
                                             </td>
-                                            <td className="text-center">
+                                            <td className="text-center payment-method d-none d-md-block">
                                                {
                                                 Object.entries(paymentSummary).map(([method,count])=>(
-                                                    <span key={method} className={`badge 
+                                                    <span key={method} className={`badge
                                                     ${method === "ShopeeFood" ? "btn-warning btn-shopeefood" : 
                                                                             method === "GrabFood" ? "btn-primary btn-grabfood" :
                                                                             method === "GoFood" ? "btn btn-danger btn-gofood" :
-                                                                            method === "Offline" ? "btn btn-secondary" :
-                                                                            method === "QRIS" ? "badge-dark" : ""
+                                                                            method === "Cash" ? "btn btn-secondary" :
+                                                                            method === "QRIS" ? "btn btn-dark" : ""
                                                                         }`} style={{ fontSize: '10px' }}>
                                                         {method} ({count as number})
                                                     </span>
@@ -221,33 +260,80 @@ const TransactionsPage = ()=>{
 
                     <div className="summary-section">
                         <div className="row g-md-3 g-0">
-                            <div className="col-4">
-                                <div className="summary-card">
-                                    <div className="summary-label">Total Revenue This Month</div>
-                                    <div className="summary-value">{formatCurrency(
-                                       filteredDataMonth.reduce((sum, t) => sum + sumTransaction(t), 0)
-                                    )}</div>
+                            <div className="col-12 col-md-4">
+                                <div className="summary-card d-flex flex-column justify-content-between">
+                                    <div className="d-flex justify-content-between pe-2">
+                                        <div className="summary-label">Total Revenue This Month</div>
+                                        <div className="summary-value">{formatCurrency(
+                                        filteredDataMonth.reduce((sum, t) => sum + sumTransaction(t), 0)
+                                        )}</div>
+                                    </div>
+                                    <div className="d-flex justify-content-around">
+                                        {
+                                            (Object.entries(monthlyPaymentSummary) as [string,MethodStats][]).map(([method,data])=>(
+                                                <div className={`revenue-by-payment fw-semibold ${method === 'Cash' ? "text-secondary" : 
+                                                                    method === 'QRIS' ? "text-dark" :
+                                                                    method === 'ShopeeFood' ? "text-warning" :
+                                                                    method === 'GoFood' ? "text-danger" :
+                                                                    method === 'GrabFood' ? "text-success" : ""
+                                                    }`}>
+                                                    <p>{method}</p>
+                                                    <p>{formatCurrency(data.totalRevenue)}</p>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
                                     <div className="summary-hint">Sum of all daily revenues</div>
                                 </div>
                             </div>
-                            <div className="col-4">
-                                <div className="summary-card">
-                                    <div className="summary-label">Total Orders</div>
-                                    <div className="summary-value">{
-                                            filteredDataMonth.length
-                                        }</div>
+                            <div className="col-12 col-md-4">
+                                <div className="summary-card d-flex flex-column justify-content-between">
+                                    <div className="d-flex justify-content-between pe-4">
+                                        <div className="summary-label">Total Orders</div>
+                                        <div className="summary-value">{
+                                                filteredDataMonth.length
+                                            }</div>
+                                    </div>
+                                    <div className="d-flex flex-wrap">
+                                        {                                (Object.entries(monthlyPaymentSummary) as [string,MethodStats][]).map(([method,data])=>(
+                                            <span key={method} className={`badge me-2 mb-2
+                                                ${method === "ShopeeFood" ? "btn-warning btn-shopeefood" : 
+                                                method === "GrabFood" ? "btn-primary btn-grabfood" :
+                                                method === "GoFood" ? "btn btn-danger btn-gofood" :
+                                                method === "Cash" ? "btn btn-secondary btn-sm" :
+                                                method === "QRIS" ? "btn btn-dark btn-sm" : ""
+                                            }`}>
+                                                {method} ({data.totalOrders})
+                                            </span>
+                                        ))}
+                                    </div>
                                     <div className="summary-hint">Completed transactions this month</div>
                                 </div>
                             </div>
-                            <div className="col-4">
-                                <div className="summary-card">
-                                    <div className="summary-label">Total Products Sold</div>
-                                    <div className="summary-value">
-                                        {
-                                            filteredDataMonth.reduce((sum,t)=>{
-                                                return sum + t.items.reduce((s,item)=>(s + item.quantity),0)
-                                            },0)
-                                        }
+                            <div className="col-12 col-md-4">
+                                <div className="summary-card d-flex flex-column justify-content-between">
+                                    <div className="d-flex justify-content-between pe-4">
+                                        <div className="summary-label">Total Products Sold</div>
+                                        <div className="summary-value">
+                                            {
+                                                filteredDataMonth.reduce((sum,t)=>{
+                                                    return sum + t.items.reduce((s,item)=>(s + item.quantity),0)
+                                                },0)
+                                            }
+                                        </div>
+                                        </div>
+                                    <div className="d-flex flex-wrap ">
+                                        {Object.entries(productSoldByPayment).map(([method, total])=>(
+                                            <span key={method} className={`badge me-2 mb-2
+                                                ${method === "ShopeeFood" ? "btn-warning btn-shopeefood" : 
+                                                method === "GrabFood" ? "btn-primary btn-grabfood" :
+                                                method === "GoFood" ? "btn btn-danger btn-gofood" :
+                                                method === "Cash" ? "btn btn-secondary btn-sm" :
+                                                method === "QRIS" ? "btn btn-dark btn-sm" : ""
+                                            }`}>
+                                                {method} ({total as number})
+                                            </span>
+                                        ))}
                                     </div>
                                     <div className="summary-hint">Sum of all item quantities</div>
                                 </div>

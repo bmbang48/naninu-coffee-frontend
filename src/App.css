@@ -662,6 +662,11 @@
             margin-top: 16px;
         }
 
+        .payment-method{
+            width: 200px;
+            padding: 0;   
+        }
+
         .payment-section {
             margin-bottom: 24px;
         }
@@ -1195,6 +1200,14 @@
             display: block;
             margin-top: 0.2rem;
         }
+        .custom-table tbody td.td-product-summary{
+                padding: 0;
+                width: 10px;
+            }
+            .product-summary{
+                width: 350px;
+            }
+
         
         .product-summary {
             display: flex;
@@ -1215,7 +1228,7 @@
         .total-price {
             font-weight: 700;
             color: #0b6b57;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .btn-details {
@@ -1273,6 +1286,13 @@
         .summary-hint {
             font-size: 0.75rem;
             color: #adb5bd;
+        }
+        .revenue-by-payment{
+            font-size: 0.8rem;
+        }
+        .revenue-by-payment p{
+            padding: 0 2px;
+            line-height: 5px;
         }
         
         /* Daily Detail Cards */
@@ -1348,6 +1368,177 @@
             color: #0b6b57;
         }
 
+        /* LoginPage */
+    .login-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .coffee-icon {
+      animation: float 3s ease-in-out infinite;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .brand-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-subtitle {
+      font-size: 0.875rem;
+      color: #999;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      pointer-events: none;
+    }
+
+    .form-control {
+      padding-left: 2.75rem;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      background-color: #f9f9f9;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background-color: #fff;
+      border-color: #0e9080;
+      box-shadow: 0 0 0 3px rgba(14, 144, 128, 0.15);
+      outline: none;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      accent-color: #0e9080;
+    }
+
+    .forgot-link {
+      font-size: 0.875rem;
+      color: #0e9080;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-link:hover {
+      color: #0a7566;
+      text-decoration: none;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.875rem;
+      background-color: #0e9080;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .btn-login:hover {
+      background-color: #0a7566;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(14, 144, 128, 0.35);
+      color: white;
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #f0f0f0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #ccc;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 1.5rem;
+      }
+
+      .brand-title {
+        font-size: 1.5rem;
+      }
+
+      .brand-subtitle {
+        font-size: 0.8rem;
+      }
+    }
 
 
 @media print {
@@ -1532,16 +1723,23 @@
 
             .summary-section .summary-card{
                 padding: 10px;
-                height: 100px;
+                height: 150px;
+                margin: 5px 0;
+            }
+            .summary-section .summary-card .summary-value{
+                font-size: 18px;
+                text-align: right;
+                /* text-decoration:underline; */
+                line-height: 26px;
             }
 
             .summary-section .summary-card .summary-label, .popup-card .custom-table, .popup-card .custom-table .order-number,
             .popup-card .custom-table .product-tag, .popup-card .custom-table .total-price, .popup-card .custom-table .btn-sm{
-                font-size: 9px;
+                font-size: 15px;
             }
 
             .summary-section .summary-card .summary-value{
-                font-size: 12px;
+                font-size: 15px;
             }
             .summary-section .summary-card .summary-hint{
                 font-size: 7px;
@@ -1552,6 +1750,47 @@
             .products-grid{
                 grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             }
+            .badge{
+                font-size: 9px;
+            }
+            .payment-method .badge.badge-table.btn{
+                font-size: 1px;
+            }
+            /* detail  transaction */
+            .popup-header.payment-header .day-date{
+                font-size: 14px;
+            }
+            .popup-header.payment-header .day-stats{
+                font-size: 12px;
+                line-height: 12px;
+            }
+            .custom-table.card-detail thead th{
+                font-size: 12px;
+            }
+            .custom-table.card-detail tbody td{
+                font-size: 12px;
+            }
+            .custom-table.card-detail .products-sold .product-summary{
+                width: 130px;
+            }
+            .custom-table.card-detail .product-tag{
+                font-size: 10px;
+                padding: 4px 1px;
+            }
+            .custom-table.card-detail .order-number{
+                font-size: 10px;
+            }
+            .custom-table.card-detail .btn.btn-sm{
+                font-size: 9px;
+                padding: 3px 1.5px;
+            }
+            .custom-table.card-detail .total-price{
+                font-size: 10px;
+            }
+            .custom-table.card-detail .btn.btn-sm.btn-trash{
+                padding: 4px;
+            }
+
         }
 
         @media (min-width: 768px) and (max-width: 1024px) {
@@ -1567,7 +1806,42 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+             .td-products-summary, th.head-products-summary{
+                display: block;
+            }
+
+            .product-summary .product-tag{
+                font-size: 0.7rem;
+            }
+            .custom-table tbody td.td-product-summary{
+                padding: 0;
+                width: 10px;
+            }
+            .product-summary{
+                width: 160px;
+            }
+
+            .payment-method {
+                width: 100px;
+                padding: 0;
+            }
+            .custom-table thead th{
+                padding: 10px 5px;
+            }
+            .custom-table tbody td{
+                padding: 10px 5px;
+                font-size: 0.7rem;
+            }
+            .custom-table tbody td .date-cell, .custom-table tbody td .day-name{
+                font-size: 0.7rem;
+            }
+            .total-price{
+                font-size: 0.8rem;
+            }
+            .btn-details{
+                padding: 2px 4px;
+                font-size: 0.7rem;
+            }
             .transaction-section {
                 position: static;
             }

@@ -66,6 +66,12 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                         {transaction.length} • {formatCurrency(dailyRevenue)} revenue
                         </p>
                     </div>
+                    
+                    <span className="expand-icon fw-bold cursor-pointer" style={{ cursor: "pointer" }} onClick={onClose}>
+                            X
+                    </span>
+                </div>
+                <div className="popup-header payment-header">
                     {(Object.entries(revenueByMethod) as [string,MethodStats][]).map(([method, stats])=>(
                         <div key={method}>
                             <p className="day-date">
@@ -79,9 +85,6 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                             </p>
                         </div>
                     ))}
-                    <span className="expand-icon fw-bold cursor-pointer" style={{ cursor: "pointer" }} onClick={onClose}>
-                            X
-                    </span>
                 </div>
                 {
           isActiveConfirmDelete ? <ConfirmationAlert 
@@ -93,14 +96,14 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
 
                 {isExpanded && (
                     <div className="day-details">
-                    <table className="custom-table">
+                    <table className="custom-table card-detail">
                             <thead>
                                 <tr>
-                                    <th>Order Number</th>
-                                    <th className="text-center text-md-start">Product List</th>
-                                    <th className="text-center">Total Items</th>
-                                    <th className="text-center">Payment Method</th>
-                                    <th className="text-end">Total Price</th>
+                                    <th>No</th>
+                                    <th className="text-center text-md-start  products-sold">Product List</th>
+                                    <th className="text-center">Qty</th>
+                                    <th className="text-center">Payment</th>
+                                    <th className="text-center">Price</th>
                                     <th className="text-center">Option</th>
                                 </tr>
                             </thead>
@@ -110,9 +113,9 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
 
                                     return(
                                         <tr key={t.id}>
-                                            <td className="order-number">{t.transaction_code}</td>
-                                            <td>
-                                                <div className="product-summary">
+                                            <td className="order-number">{t.transaction_code.split("-")[0]}</td>
+                                            <td className="products-sold">
+                                                <div className="product-summary float-end float-md-none">
                                                     {t.items.map((item)=>(
                                                         <span className="product-tag" key={item.id}>
                                                             {item.product.product_name} x {item.quantity}
@@ -133,7 +136,7 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                                             {formatCurrency(t.total_price)}
                                             </td>
                                             <td className="text-center">
-                                            <button className="btn btn-sm btn-outline-danger ms-3" onClick={()=>handleActiveDelete(t.id)}>
+                                            <button className="btn btn-sm btn-outline-danger ms-3 btn-trash" onClick={()=>handleActiveDelete(t.id)}>
                                                 <i className="bi bi-trash"></i>
                                             </button>
                                             </td>

@@ -3,6 +3,10 @@ import logoWhite from "../assets/logo-nav.png"
 import { useTransactions } from "../api/useTransaction";
 import { formatCurrency } from "../components/FormatCurrency";
 const HomePage = () => {
+
+
+
+
     // Transaction Today
     const {data:transactions} = useTransactions();
     // console.log(transactions)
@@ -45,6 +49,7 @@ const HomePage = () => {
     // console.log("TOP PRODUCT :", topProduct)
 
     const topProductName = Number(topProduct[1]) > 0 ? topProduct[0] : "Belum ada transaksi";
+
 
 
 
