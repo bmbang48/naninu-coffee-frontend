@@ -1,6 +1,6 @@
 import { baseUrl } from "./baseUrl";
 
-export const fetchWithAuth = async (endpoint, options = {})=>{
+export const fetchWithAuth = async (endpoint, options:RequestInit = {})=>{
     const token = localStorage.getItem("token");
 
     const response = await fetch(`${baseUrl}/api${endpoint}`,{
@@ -9,7 +9,7 @@ export const fetchWithAuth = async (endpoint, options = {})=>{
             "Content_Type" : "application/json",
             "Accept" : "application/json",
             Authorization: token? `Bearer ${token}` : "",
-            ...options.headers
+            ...(options.headers || {})
         }
     });
 

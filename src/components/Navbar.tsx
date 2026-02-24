@@ -4,7 +4,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import logoNav from "../assets/logo-nav.png";
 import { useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
-import { fetchWithAuth } from "../api/FetchWithAuth";
+import { fetchWithAuth } from "../api/fetchWithAuth";
+import { logoutUser } from "../api/useLogin";
 const Navbar = () => {
   const [user, setUser] = useState(null);
     const navigate = useNavigate();

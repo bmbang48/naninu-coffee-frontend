@@ -1,4 +1,4 @@
-import { fetchWithAuth } from "./FetchWithAuth";
+import { fetchWithAuth } from "./fetchWithAuth";
 import { baseUrl } from "./baseUrl";
 
 export const loginUser = async (email,password)=>{
