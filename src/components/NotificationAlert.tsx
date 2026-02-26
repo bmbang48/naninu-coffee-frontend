@@ -15,9 +15,6 @@ const NotificationAlert = ({message, subject, isSuccess, setIsSuccess, handleClo
         <div className="popup-confirmation">
             <div className="modal-dialog">
                 <div className="modal-content">
-                <div className="modal-header" data-bs-theme="dark">
-                    <p className="btn-x position-absolute top-0" onClick={handleCloseForm}>X</p>
-                </div>
                 <div className="modal-body">
                     <h5 className="modal-title text-center text-white" id="confirmModalLabel">{subject}</h5>
                     {message}

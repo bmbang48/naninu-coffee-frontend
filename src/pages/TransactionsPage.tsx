@@ -96,8 +96,9 @@ const TransactionsPage = ()=>{
     }
 
     //Jumlah
-    const sumTransaction = (t) =>
-    t.items.reduce((itemSum, item) => itemSum + item.subtotal, 0);
+
+    const sumTotal = transactions.reduce((sum,transaction)=> sum + transaction.total_price,0);
+    // console.log(sumTotal);
 
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
 
@@ -112,7 +113,7 @@ const TransactionsPage = ()=>{
         }
 
         acc[method].totalOrders += 1;
-        acc[method].totalRevenue += sumTransaction(t);
+        acc[method].totalRevenue += t.total_price;
         
         return acc;
     }, {} as StatsAccumulator);
@@ -244,7 +245,7 @@ const TransactionsPage = ()=>{
                                             </td>
                                             <td className="text-end total-price">
                                                 {
-                                                    formatCurrency(transaction.reduce((sum, t) => sum + sumTransaction(t), 0))
+                                                    formatCurrency(transaction.reduce((sum, t) => sum + t.total_price,0))
                                                 }
                                             </td>
                                             <td className="text-center">
@@ -264,9 +265,7 @@ const TransactionsPage = ()=>{
                                 <div className="summary-card d-flex flex-column justify-content-between">
                                     <div className="d-flex justify-content-between pe-2">
                                         <div className="summary-label">Total Revenue This Month</div>
-                                        <div className="summary-value">{formatCurrency(
-                                        filteredDataMonth.reduce((sum, t) => sum + sumTransaction(t), 0)
-                                        )}</div>
+                                        <div className="summary-value">{formatCurrency(sumTotal)}</div>
                                     </div>
                                     <div className="d-flex justify-content-around">
                                         {

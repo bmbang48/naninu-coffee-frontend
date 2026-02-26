@@ -44,6 +44,7 @@ const CashierPage = () => {
       
       const [isSuccess,setIsSuccess] = useState(false);
       const [isSave,setIsSave] = useState(false);
+      const [isQris,setIsQris] = useState(false);
 
       const [isOfflineOrder, setIsOfflineOrder] = useState(false);
       const [isCash, setIsCash] = useState(false);
@@ -162,7 +163,7 @@ const CashierPage = () => {
             order_method: newMethod ? newMethod : "Offline",
             payment_method: newMethod ? newMethod : paymentMethod
           };
-      console.log(payload);
+      // console.log(payload);
       storeTransaction(payload, {
         onSuccess: (data) => {
           console.log("Transaction saved successfully:", data);
@@ -212,14 +213,13 @@ const CashierPage = () => {
     } 
 
 
-
   return (
     <div className="container">
-      {isSuccess ? (<NotificationAlert
-          message="Pembayaran Berhasil Dilakukan"
-          isSuccess={isSuccess}
-          setIsSuccess={setIsSuccess}
-          subject="Pembayaran Berhasil"
+      {isQris ? (<NotificationAlert
+          message={`Total Harga = ${subtotal}`}
+          isSuccess={isQris}
+          setIsSuccess={setIsQris}
+          subject="Pembayaran melalui QRIS"
           handleCloseForm={()=>setIsSuccess(false)}
           />) : null}
       {isSave ? (<NotificationAlert
@@ -404,9 +404,9 @@ const CashierPage = () => {
                         </div>
                     </div>
                     <div className={`payment-section ${isOfflineOrder ? "" : "d-none"}`}>
-                        <div className="payment-method d-flex">
+                        <div className="payment-method d-flex w-100">
                           <button className="btn btn-success flex-fill" onClick={()=>{setIsCash(!isCash);setPaymentMethod("Cash")}}>Cash</button>
-                          <button className="btn btn-danger flex-fill" onClick={()=>{setPaymentMethod("QRIS"); setBayar(subtotal)}}>Qris</button>
+                          <button className="btn btn-danger flex-fill" onClick={()=>{setPaymentMethod("QRIS"); setBayar(subtotal); setIsQris(true)}}>Qris</button>
                         </div>
                         <div className={`input-group ${isCash ? " " : "d-none"}`}>
                             <label className="input-label">Jumlah Bayar</label>
