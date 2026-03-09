@@ -97,7 +97,7 @@ const TransactionsPage = ()=>{
 
     //Jumlah
 
-    const sumTotal = transactions.reduce((sum,transaction)=> sum + transaction.total_price,0);
+    const sumTotal = filteredDataMonth.reduce((sum,transaction)=> sum + transaction.total_price,0);
     // console.log(sumTotal);
 
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
@@ -172,8 +172,10 @@ const TransactionsPage = ()=>{
                                     Daily breakdown for the selected month (1 row = 1 day)
                                 </p>
                             </div>
+                            <div>
+                                <button className="btn btn-success">Add Transaction</button>
+                            </div>
                         </div>
-
                         <div className="table-responsive">
                             <table className="custom-table">
                                 <thead>
@@ -265,7 +267,7 @@ const TransactionsPage = ()=>{
                                 <div className="summary-card d-flex flex-column justify-content-between">
                                     <div className="d-flex justify-content-between pe-2">
                                         <div className="summary-label">Total Revenue This Month</div>
-                                        <div className="summary-value">{formatCurrency(sumTotal)}</div>
+                                        <div className="summary-value">{sumTotal === 0 ? "Rp. 0" : formatCurrency(sumTotal)}</div>
                                     </div>
                                     <div className="d-flex justify-content-around">
                                         {

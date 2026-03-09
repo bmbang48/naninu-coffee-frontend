@@ -8,7 +8,7 @@ interface Props {
         setIsActiveForm: (isActiveForm: boolean) => void;
         formData?: {
             id?: number | null;
-            material_name?: string;
+            name?: string;
             price?: number | null;
             amount?: number | null;
             unit?: string;
@@ -29,7 +29,7 @@ const FormMaterial = ({isActiveForm,setIsActiveForm,formData, mode} : Props) =>{
     useEffect(()=>{
         if (mode === 'edit' && formData) {
             setLocalFormData({
-                material_name: formData.material_name || '',
+                material_name: formData.name || '',
                 price: formData.price?.toString() || '',
                 amount: formData.amount?.toString() || '',
                 unit: formData.unit || '',
@@ -114,6 +114,7 @@ const FormMaterial = ({isActiveForm,setIsActiveForm,formData, mode} : Props) =>{
     const handleCloseForm = () => {
         setIsActiveForm(!isActiveForm);
     };
+    console.log(formData);
 
 
     // Format Currency Function

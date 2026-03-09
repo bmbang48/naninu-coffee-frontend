@@ -4,10 +4,10 @@ import { baseUrl } from "../api/baseUrl";
 import NotificationAlert from "../components/NotificationAlert";
 import { formatCurrency } from "../components/FormatCurrency";
 import { unformatCurrency } from "../components/FormatCurrency";
-import { useStoreTransaction } from "../api/useTransaction";
+import { useStoreTransaction, useTransactions } from "../api/useTransaction";
 import { useReactToPrint } from "react-to-print";
 import FormOnlineOrder from "../components/FormOnlineOrder";
-
+import logo from "../../dist/Logo Cup Hijau.png";
 const CashierPage = () => {
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +20,7 @@ const CashierPage = () => {
     return () => clearTimeout(handler);
   },[searchTerm]);
   const {data: products, isLoading:productsIsLoading, error: productsError} = useProductsCashier(page,debouncedSearch);
+  const {data: transactions = [] } = useTransactions();
       // console.log(products);
       // productsIsLoading ? console.log('Loading...') : console.log(products.data);
       const items = products?.data?.data??[];
@@ -32,6 +33,36 @@ const CashierPage = () => {
         qty: number;
         price: number;
       }
+
+      const [transactionDate, setTransactionDate] = useState(new Date());
+      const formatDate = (date:Date)=>{
+        const year = date.getFullYear();
+        const month = String(date.getMonth()+1).padStart(2,"0");
+        const day = String(date.getDate()).padStart(2,"0");
+        return `${year}-${month}-${day}`;
+      }
+      const formatDisplayDate = (date:Date)=>{
+        const year = date.getFullYear();
+        const month = String(date.getMonth()+1).padStart(2,"0");
+        const day = String(date.getDate()).padStart(2,"0");
+        return `${day}-${month}-${year}`;
+      }
+      const generateTransactionCode = ()=>{
+        // const today = new Date();
+        const dateDisplay = formatDisplayDate(transactionDate);
+
+        const todayStr = formatDate(transactionDate);
+        const todayTransactions = transactions.filter(
+          (t)=>t.transaction_date?.startsWith(todayStr)
+        );
+
+        const nextNumber = todayTransactions.length + 1;
+
+        console.log(todayStr);
+        console.log(transactions);
+        return `${String(nextNumber).padStart(3,"0")}-${dateDisplay}`;
+      }
+
 
       const [customerName, setCustomerName] = useState('');
       const [productsList, setProductsList] = useState<Product[]>([]);
@@ -61,7 +92,9 @@ const CashierPage = () => {
         console.log("Kembalian Updated:", kembalian);
       }, [kembalian]);
 
-      const [transaction_code, setTransactionCode] = useState(`${Math.ceil(Math.random() * 1000)}-${new Date().toLocaleDateString("id-ID").split("/").join("-")}`); 
+      const transaction_code = generateTransactionCode();
+
+      // const [transaction_code, setTransactionCode] = useState(`${Math.ceil(Math.random() * 1000)}-${new Date().toLocaleDateString("id-ID").split("/").join("-")}`); 
 
       // const [qty, setQty] = useState(0);
 
@@ -135,9 +168,12 @@ const CashierPage = () => {
           alert("Nama customer harus diisi");
           return;
         }
-        if(bayar < total){
-          alert("Uang tidak cukup");
-          return;
+        if(paymentMethod === "Cash"){
+          console.log("ini order offline")
+          if(bayar < total){
+            alert("Uang tidak cukup");
+            return;
+          }
         }
 
         const items = productsList?.map((product) => ({
@@ -152,7 +188,7 @@ const CashierPage = () => {
         }
         const payload = {
             transaction_code : transaction_code,
-            transaction_date : new Date().toISOString().split('T')[0],
+            transaction_date : formatDate(transactionDate),
             customer_name : customerName,
             discount: diskon,
             total_price : newPrice ? newPrice : subtotal,
@@ -168,7 +204,6 @@ const CashierPage = () => {
         onSuccess: (data) => {
           console.log("Transaction saved successfully:", data);
           setCustomerName("");
-          setTransactionCode(`${Math.ceil(Math.random() * 1000)}-${new Date().toLocaleDateString("id-ID").split("/").join("-")}`);
           setSubtotal(0);
           setProductsList([]);
           setDiskon(0);
@@ -319,12 +354,16 @@ const CashierPage = () => {
                 <h2 className="section-title mb-3 mb-md-">🧾 Detail Transaksi</h2>            
                 <div className="customer-info" >
                     <div className="input-group">
+                        <label className="input-label">No. Pesanan</label>
+                        <input type="text" className="input-field" id="orderNumber" value={transaction_code} readOnly/>
+                    </div>
+                    <div className="input-group">
                         <label className="input-label">Nama Pelanggan</label>
                         <input type="text" className="input-field" name="nama" id="nama" value={customerName} onChange={(e) => setCustomerName(e.target.value)}  placeholder="Masukkan nama pelanggan"></input>
                     </div>
                     <div className="input-group">
-                        <label className="input-label">No. Pesanan</label>
-                        <input type="text" className="input-field" id="orderNumber" value={transaction_code} readOnly/>
+                        <label className="input-label">Tanggal</label>
+                        <input type="date" className="input-field" id="orderDate" value={new Date(transactionDate).toLocaleDateString("en-CA")} onChange={(e)=>setTransactionDate(new Date(e.target.value))} />
                     </div>
                 </div>
 
@@ -447,9 +486,9 @@ const CashierPage = () => {
 <div style={{ display: "none" }}>
   <div ref={printRef} className="print-receipt">
     <div className="receipt-header mb-3">
-      <h2 className="m-0">☕ NANINU COFFEE</h2>
-      <p className="m-0">Jl. Kopi No. 12, Jakarta</p>
-      <p className="m-0">Telp: 0812-3456-7890</p>
+      <h2 className="m-0"><img src={logo} alt="Logo Naninu Coffee" width={"10px"} /> NANINU COFFEE</h2>
+      <p className="m-0">Jl. Mampang Prapatan 5, Jakarta Selatan</p>
+      <p className="m-0">Telp: 0858-1730-1422</p>
       <hr />
     </div>
 
@@ -490,10 +529,17 @@ const CashierPage = () => {
         <span>Bayar</span>
         <span>{formatCurrency(bayar)}</span>
       </div>
+      {paymentMethod === "QRIS" ? 
+      <div className="summary-row m-0">
+        <span>Metode Pembayaran</span>
+        <span>{paymentMethod}</span>
+      </div>
+      :
       <div className="summary-row m-0">
         <span>Kembalian</span>
         <span>{formatCurrency(kembalian)}</span>
       </div>
+      }
     </div>
 
     <div className="receipt-footer">
