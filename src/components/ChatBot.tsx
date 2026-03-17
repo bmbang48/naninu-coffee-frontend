@@ -142,7 +142,7 @@ const styles = {
     padding: "8px 12px",
     margin: "5px",
     borderRadius: "10px",
-    background: from === "user" ? "#00c3ff" : "#eee",
+    background: from === "user" ? "#07795c" : "#eee",
     color: from === "user" ? "#fff" : "#000"
   })
 };
