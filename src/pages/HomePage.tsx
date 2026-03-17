@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import logoWhite from "../assets/logo-nav.png"
 import { useTransactions } from "../api/useTransaction";
 import { formatCurrency } from "../components/FormatCurrency";
+import Chatbot from "../components/ChatBot";
 const HomePage = () => {
 
 
@@ -56,6 +57,7 @@ const HomePage = () => {
 
   return (
     <div>
+        <Chatbot/>
       {/* <!-- Hero Section --> */}
     <section className="hero-section">
         <div className="container">

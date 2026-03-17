@@ -9,7 +9,6 @@ import TransactionPage from "./pages/TransactionsPage"
 import "./App.css";
 import LoginPage from "./pages/LoginPage"
 import ProtectedRoute from "./components/ProtectedRoute"
-
 function App() {
 
   return (
