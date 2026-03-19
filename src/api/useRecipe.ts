@@ -18,7 +18,7 @@ const fetchRecipes = async ()=>{
     }
 
     const json = await response.json();
-    return JSON.parse(JSON.stringify(json.data.data));
+    return JSON.parse(JSON.stringify(json.data));
 
 }
 

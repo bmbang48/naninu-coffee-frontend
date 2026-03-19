@@ -66,7 +66,7 @@ const CardHpp = ({product, recipes}:Props) => {
             isConfirmDelete={isConfirmDelete}
             setIsConfirmDelete={setIsConfirmDelete}/> : null}
       {deleteIsLoading && <p>Deleting...</p>}
-      <div className="card col-lg-3 col-6 product-card rounded-3 align-items-between justify-content-between shadow-sm h-100 p-0 pt-2 m-0 ">
+      <div className="card card-hpp col-lg-3 col-6 product-card rounded-3 align-items-between justify-content-between shadow-sm h-100 p-0 pt-2 m-0 ">
     
         <div className="product-image hpp d-flex justify-content-center w-100 bg-transparent pt-2 overflow-visible">
         <img src={`${baseUrl}/storage/products/${product.image}`} className="img-product-hpp" alt="..."/>

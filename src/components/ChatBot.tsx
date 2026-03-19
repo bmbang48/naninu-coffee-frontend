@@ -63,7 +63,7 @@ useEffect(() => {
 
   return (
     <div style={styles.container} className="z-3">
-        <button onClick={() => setOpen(!open)}>
+        <button onClick={() => setOpen(!open)} className="btn btn-small">
             💬
         </button>
         {open && 

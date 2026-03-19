@@ -21,6 +21,7 @@ const HppPage = () => {
         setIsActiveForm(!isActiveForm);
     }
 
+    console.log("Ini Recipes",recipes);
 
 const groupedByProduct = useMemo<
   Record<number, GroupedProduct>
@@ -46,6 +47,7 @@ const groupedByProduct = useMemo<
   }, {} as Record<number, GroupedProduct>);
 }, [recipes]);
 
+console.log("Ini Group",groupedByProduct);
 
 
 
@@ -71,7 +73,7 @@ const groupedByProduct = useMemo<
                         </div>
                     </div>
                     <div className="col-12 mt-3 ">
-                        <div className="d-flex flex-wrap justify-content-between">
+                        <div className="d-flex flex-wrap justify-content-between ">
                             { recipesError ? (<p>Oops, Terjadi Kesalahan pada recipe</p>) : recipesIsLoading ? (<p>Loading...</p>) : 
                             Object.values(groupedByProduct).map((group)=>(
                                 <CardHpp key={group.product.id} product={group.product} recipes={group.recipes}/>

@@ -8,6 +8,7 @@ import { useStoreTransaction, useTransactions } from "../api/useTransaction";
 import { useReactToPrint } from "react-to-print";
 import FormOnlineOrder from "../components/FormOnlineOrder";
 import logo from "../../dist/Logo Cup Hijau.png";
+import ChatRecipeBot from "../components/ChatRecipeBot";
 const CashierPage = () => {
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("");
@@ -250,6 +251,7 @@ const CashierPage = () => {
 
   return (
     <div className="container">
+      <ChatRecipeBot/>
       {isQris ? (<NotificationAlert
           message={`Total Harga = ${subtotal}`}
           isSuccess={isQris}

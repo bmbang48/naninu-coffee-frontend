@@ -57,7 +57,6 @@ const HomePage = () => {
 
   return (
     <div>
-        <Chatbot/>
       {/* <!-- Hero Section --> */}
     <section className="hero-section">
         <div className="container">

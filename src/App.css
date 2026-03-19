@@ -4,6 +4,18 @@
     font-weight: normal;
 }
 
+   body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
 .btn.btn-success {
   background-color: #0e9080;
   color: white;
@@ -116,22 +128,11 @@
   font-size: 14px;
 }
 .card-body {
-    font-size: clamp(0.3rem, 0.8rem, 0.9rem);
+    /* font-size: clamp(0.3rem, 0.8rem, 0.9rem); */
 }
 
 
-   body {
-            box-sizing: border-box;
-        }
-        
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
 
-        body {
-            background-color: #f8f9fa;
-            color: #495057;
-        }
 
         .navbar-brand {
             font-weight: 700;
