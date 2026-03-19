@@ -19,7 +19,7 @@ export default function ChatRecipeBot() {
 
     try {
       const res = await fetch(
-        "http://localhost:5678/webhook/chatbot",
+        "https://chronos.ploutosforge.com/webhook/chatbot",
         {
           method: "POST",
           headers: {
