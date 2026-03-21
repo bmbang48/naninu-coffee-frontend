@@ -63,7 +63,7 @@ const fetchTransaction = async () =>{
     }
 
     const json = await response.json();
-    return json.data.data;
+    return json.data;
     
 }
 
