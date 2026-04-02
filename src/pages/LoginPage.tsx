@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { loginUser } from "../api/useLogin";
 import { useNavigate } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../authconfig";    
 
 const LoginPage = ()=>{
     const [email,setEmail] = useState("");
@@ -8,6 +10,19 @@ const LoginPage = ()=>{
     const [loading,setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    const { instance } = useMsal();
+    
+    const handleMicrosoftLogin = async()=>{
+    const response = await instance.loginPopup(loginRequest);
+
+    const user = response.account;
+
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", "SSO_LOGIN");
+
+    navigate("/", { replace: true });
+}
 
     const handleLogin = async (e:React.FormEvent)=>{
         e.preventDefault(); 
@@ -30,6 +45,18 @@ const LoginPage = ()=>{
             setLoading(false);
         }
     }
+    const { accounts } = useMsal();
+    console.log(accounts);
+    // useEffect(() => {
+    //     if (accounts.length > 0) {
+    //         const user = accounts[0];
+
+    //         localStorage.setItem("user", JSON.stringify(user));
+    //         localStorage.setItem("token", "SSO_LOGIN");
+    //         console.log("redirect ke dasboard");
+    //         navigate("/", { replace: true });
+    //     }
+    // }, [accounts]);
     return(
         <>
         <div className="login-wrapper">
@@ -58,6 +85,7 @@ const LoginPage = ()=>{
                 {/* <div className="d-flex justify-content-between align-items-center mb-1" ><label className="checkbox-wrapper"> <input type="checkbox"/> <span>Ingat saya</span> </label> <a href="#" className="forgot-link">Lupa Password?</a> */}
                 {/* </div> */}
                 <button type="submit" className="btn-login">Masuk</button>
+                <button className="btn btn-primary w-100 py-3 rounded-4 mt-3" onClick={handleMicrosoftLogin}>Masuk dengan Microsoft</button>
                 </form>
                 <div className="divider">
                 © 2025 Naninu Coffee

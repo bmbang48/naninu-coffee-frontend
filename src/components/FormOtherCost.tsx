@@ -8,7 +8,7 @@ interface Props {
         formData?: {
             id?: number | null;
             name_cost?: string;
-            cost_per_product?: number;
+            amount?: number;
         },
         mode: 'create' | 'edit';
     }
@@ -20,19 +20,19 @@ const FormOtherCost = ({isActiveForm, setIsActiveForm, formData, mode}: Props) =
     
     const [localFormData, setLocalFormData] = useState({
         name_cost: '',
-        cost_per_product: '',
+        amount: '',
     });
 
     useEffect(()=>{
         if (mode === 'edit' && formData) {
             setLocalFormData({
                 name_cost: formData.name_cost || '',
-                cost_per_product: formData.cost_per_product?.toString() || '',
+                amount: formData.amount?.toString() || '',
             });
         } else {
             setLocalFormData({
                 name_cost: '',
-                cost_per_product: '',
+                amount: '',
             });
         }
     }
@@ -40,15 +40,15 @@ const FormOtherCost = ({isActiveForm, setIsActiveForm, formData, mode}: Props) =
 
     const handleSubmit = (e: React.FormEvent) =>{
         e.preventDefault();
-        const cleanCost = localFormData.cost_per_product.toString().replace(/\D/g, ''); 
+        const cleanCost = localFormData.amount.toString().replace(/\D/g, ''); 
 
         const data = new FormData();
         data.append('name_cost', localFormData.name_cost);
-        data.append('cost_per_product', cleanCost);
+        data.append('amount', cleanCost);
         storeOtherCost(data);
         setLocalFormData({
             name_cost: '',
-            cost_per_product: '',
+            amount: '',
         });
         if(isActiveForm){
             setIsActiveForm(!isActiveForm);
@@ -66,15 +66,15 @@ const FormOtherCost = ({isActiveForm, setIsActiveForm, formData, mode}: Props) =
             return;
         }
 
-        const cleanCost = localFormData.cost_per_product.toString().replace(/\D/g, '');
+        const cleanCost = localFormData.amount.toString().replace(/\D/g, '');
         const data = new FormData();
         data.append('_method', 'PUT');
         data.append('name_cost', localFormData.name_cost);
-        data.append('cost_per_product', cleanCost);
+        data.append('amount', cleanCost);
         updateOtherCost({id: formData.id, data});
         setLocalFormData({
             name_cost: '',
-            cost_per_product: '',
+            amount: '',
         });
         if(isActiveForm){
             setIsActiveForm(!isActiveForm);
@@ -99,10 +99,10 @@ const FormOtherCost = ({isActiveForm, setIsActiveForm, formData, mode}: Props) =
                 <div className="mb-4">
                     <label htmlFor="price" className="form-label">Price</label>
                     <input type="text" className="form-control" id="price" 
-                    value={formatCurrency(localFormData.cost_per_product)}
+                    value={formatCurrency(localFormData.amount)}
                     onChange={(e) => {
                         const unformattedValue = unformatCurrency(e.target.value);
-                        setLocalFormData({...localFormData, cost_per_product: unformattedValue});
+                        setLocalFormData({...localFormData, amount: unformattedValue});
                     }}
                     />
                 </div>

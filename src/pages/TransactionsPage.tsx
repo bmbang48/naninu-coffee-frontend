@@ -98,7 +98,10 @@ const TransactionsPage = ()=>{
     //Jumlah
 
     const sumTotal = filteredDataMonth.reduce((sum,transaction)=> sum + transaction.total_price,0);
-    // console.log(sumTotal);
+    const sumProfit = filteredDataMonth.reduce((sum,transaction)=> 
+        // console.log(transaction.total_profit),0);
+        sum + parseFloat(transaction.total_profit),0);
+    console.log(sumTotal);   
 
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
 
@@ -187,6 +190,7 @@ const TransactionsPage = ()=>{
                                         <th className="head-products-summary">Products Summary</th>
                                         <th className="text-center pe-5 d-none d-md-block">Payment</th>
                                         <th className="text-end">Total Price</th>
+                                        <th className="text-end">Total Profit</th>
                                         <th className="text-center">Options</th>
                                     </tr>
                                 </thead>
@@ -216,7 +220,7 @@ const TransactionsPage = ()=>{
                                             </td>
                                             <td className="text-center">{transaction.length} Order</td>
                                             <td className="text-center">{
-                                                transaction.reduce((sum,t)=> sum + t.items.length,0)
+                                                transaction.reduce((sum,t)=> sum + t.items.reduce((s,item)=> s+ Number(item.quantity),0),0)
                                                 } Items</td>
                                             <td className="td-products-summary">
                                                 <div className="product-summary">
@@ -251,7 +255,10 @@ const TransactionsPage = ()=>{
                                                 }
                                             </td>
                                             <td className="text-center">
-                                                <button className="btn-details" onClick={()=>setSelectedDay({date, transaction})}>Details</button>
+                                                <button className="btn-details" onClick={()=>setSelectedDay({
+                                                            date,
+                                                            transaction: [...transaction] 
+                                                        })}>Details</button>
                                             </td>
                                         </tr>
                                         )})
@@ -284,6 +291,11 @@ const TransactionsPage = ()=>{
                                             ))
                                         }
                                     </div>
+                                    <div className="d-flex justify-content-between pe-2">
+                                        <div className="summary-label">Total Profit This Month</div>
+                                        <div className="summary-value">{sumProfit === 0 ? "Rp. 0" : formatCurrency(sumProfit)}</div>
+                                    </div>
+
                                     <div className="summary-hint">Sum of all daily revenues</div>
                                 </div>
                             </div>
@@ -342,6 +354,7 @@ const TransactionsPage = ()=>{
                         </div>
                     </div>
                         <CardDetailTransaction 
+                        key={selectedDay?.date}
                         selectedDay={selectedDay} 
                         onClose={()=>setSelectedDay(null)}></CardDetailTransaction>
         </div>

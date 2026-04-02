@@ -3,6 +3,7 @@ import { useState } from "react";
 import FormMaterial from "../components/FormMaterial";
 import ConfirmationAlert from "../components/ConfirmationAlert";
 import { formatCurrency } from "../components/FormatCurrency";
+import FormStock from "../components/FormStock";
 
 const MaterialPage = () => {
 
@@ -13,7 +14,9 @@ const MaterialPage = () => {
     const materials = data?.data ?? [];
     const currentPage = data?.current_page ?? 1;
     const lastPage = data?.last_page ?? 1;
-
+    const [isStockForm, setIsStockForm] = useState(false);
+    const [stockMode, setStockMode] = useState<'restock' | 'adjust'>('restock');
+    const [selectedMaterial, setSelectedMaterial] = useState<any>(null);
 
     const {mutate: deleteMaterial } = useDeleteMaterial();
 
@@ -46,6 +49,18 @@ const MaterialPage = () => {
         setIsActiveForm(!isActiveForm);
     }
 
+    const handleRestock = (material:any) => {
+    setSelectedMaterial(material);
+    setStockMode('restock');
+    setIsStockForm(true);
+    };
+
+    const handleAdjust = (material:any) => {
+    setSelectedMaterial(material);
+    setStockMode('adjust');
+    setIsStockForm(true);
+    };
+
     return (
         <div className="card section-card rounded-3 shadow-sm">
             <div className="card-header py-3 d-flex justify-content-between align-items-center flex-row">
@@ -72,6 +87,14 @@ const MaterialPage = () => {
             isConfirmDelete={isConfirmDelete}
             setIsConfirmDelete={setIsConfirmDelete}/> : null}
         {materialsError && <p>Error: {materialsError.message}</p>}
+
+        {isStockForm && (
+            <FormStock
+                material={selectedMaterial}
+                mode={stockMode}
+                onClose={() => setIsStockForm(false)}
+            />
+            )}
         <div className="card-body p-0">
 
             <div className="table-responsive">
@@ -82,7 +105,8 @@ const MaterialPage = () => {
                             <th className="px-3 py-3" scope="col">Material Name</th>
                             <th className="px-3 py-3" scope="col">Price</th>
                             <th className="px-3 py-3" scope="col">Unit</th>
-                            <th className="px-3 py-3" scope="col">Action</th>
+                            <th className="px-3 py-3" scope="col">Stock</th>
+                            <th className="px-3 py-3 text-center" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,11 +120,26 @@ const MaterialPage = () => {
                                 <td className="px-3 py-3" scope="col">{material.name}</td>
                                 <td className="px-3 py-3" scope="col">{formatCurrency(material.price)}</td>
                                 <td className="px-3 py-3" scope="col">{material.amount} {material.unit}</td>
-                                <td className="d-flex py-3">
+                                <td className="px-3 py-3" scope="col">{material.stock} {material.unit}</td>
+                               
+                                <td className="py-3 px-3 w-100 h-100 text-center" scope="col">
+                                    <button 
+                                        className="btn btn-success btn-sm me-2"
+                                        onClick={() => handleRestock(material)}
+                                        >
+                                        <i className="bi bi-plus"></i>
+                                        </button>
+
+                                        <button 
+                                        className="btn btn-secondary btn-sm me-2"
+                                        onClick={() => handleAdjust(material)}
+                                        >
+                                        <i className="bi bi-sliders"></i>
+                                        </button>
                                     <button className="btn btn-warning btn-sm me-2" onClick={()=>handleEditMaterial(material)}>
                                         <i className="bi bi-pencil"></i>
                                     </button>
-                                    <button className="btn btn-outline-danger btn-sm" onClick={()=>handleActiveConfirmDelete(material.id)}>
+                                    <button className="btn btn-outline-danger btn-sm me-2" onClick={()=>handleActiveConfirmDelete(material.id)}>
                                         <i className="bi bi-trash"></i>
                                     </button>
                                 </td>

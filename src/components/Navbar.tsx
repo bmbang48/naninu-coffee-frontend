@@ -6,32 +6,64 @@ import { useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { fetchWithAuth } from "../api/fetchWithAuth";
 import { logoutUser } from "../api/useLogin";
+import { useMsal } from "@azure/msal-react";
+
 const Navbar = () => {
+  const { instance } = useMsal();
   const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        const getUser = async ()=>{
-            const data = await fetchWithAuth("/me");
-            setUser(data);
-        };
+  useEffect(() => {
+      const token = localStorage.getItem("token");
 
-        getUser();
-    },[]);
+      // 🔥 kalau belum ada token → jangan fetch
+      if (!token) return;
 
-    const handleLogout = async ()=>{
-            try {
-            await logoutUser();
-            } catch (error) {
-            console.error("Logout error:", error);
-            } finally {
-            // Hapus token walaupun API gagal
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
+      // 🔥 ambil dari localStorage dulu
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+          setUser(JSON.parse(localUser));
+      }
+
+      // 🔥 baru fetch ke API (optional)
+      const getUser = async () => {
+          const data = await fetchWithAuth("/me");
+          if (data) setUser(data);
+      };
+
+      if (token !== "SSO_LOGIN") {
+          getUser();
+      }
+  }, []);
+    console.log(user);
+
     
+    const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+      try {
+          // 🔥 kalau login biasa (Laravel)
+          if(token !== "SSO_LOGIN"){
+              await logoutUser();
+          }
+
+          // 🔥 kalau login Microsoft
+          if(token === "SSO_LOGIN"){
+              await instance.logoutPopup({
+                  postLogoutRedirectUri: "/login"
+              });
+          }
+
+      } catch (error) {
+          console.error("Logout error:", error);
+      } finally {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+
+          setTimeout(()=>{
             navigate("/login", { replace: true });
-            }
-        }
+          },100);
+      }
+  };
   return (
     <>
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
@@ -52,13 +84,10 @@ const Navbar = () => {
                     <Link className="nav-item nav-link text-white" to="/cashier">Cashier</Link>
                   </li>
                   <li>
-                    <Link className="nav-item nav-link text-white" to="/products">Products</Link>
+                    <Link className="nav-item nav-link text-white" to="/production">Production</Link>
                   </li>
-                  {/* <li>
-                    <Link className="nav-item nav-link text-white" to="/oprational">Oprational</Link>
-                  </li> */}
                   <li>
-                    <Link className="nav-item nav-link text-white" to="/hpp">Profit Margin</Link>
+                    <Link className="nav-item nav-link text-white" to="/operational">Operational</Link>
                   </li>
                   <li>
                     <Link className="nav-item nav-link text-white" to="/transactions">Transactions</Link>

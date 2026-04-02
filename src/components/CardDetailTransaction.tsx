@@ -27,6 +27,9 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
         setIsConfirmDelete(false);
         
     },[isConfirmDelete,id,deleteTransaction,selectedDay])
+    useEffect(() => {
+    setIsExpanded(true);
+    }, [selectedDay]);
     if(!selectedDay) return null;
     
     const {date,transaction} = selectedDay;
@@ -45,7 +48,8 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
         const totalQtyInTransaction = t.items.reduce((sum,item)=>sum + item.quantity,0);
 
         if(!acc[method]){
-            acc[method] = {totalRevenue : 0, totalQty: 0};
+    
+        acc[method] = {totalRevenue : 0, totalQty: 0};
         }
         acc[method].totalRevenue += amount;
         acc[method].totalQty += totalQtyInTransaction;
@@ -53,7 +57,6 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
     },{} as StatsAccumulator);
     
     
-
     return (
         <div className="popup-overlay">
             <div className="popup-card">
@@ -104,6 +107,7 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                                     <th className="text-center">Qty</th>
                                     <th className="text-center">Payment</th>
                                     <th className="text-center">Price</th>
+                                    <th className="text-center">Profit</th>
                                     <th className="text-center">Option</th>
                                 </tr>
                             </thead>
@@ -134,6 +138,9 @@ const CardDetailTransaction = ({selectedDay,onClose})=>{
                                                                         `}>{t.payment_method}</span></td>
                                             <td className="text-end total-price">
                                             {formatCurrency(t.total_price)}
+                                            </td>
+                                            <td className="text-end total-price">
+                                            {formatCurrency(t.total_profit)}
                                             </td>
                                             <td className="text-center">
                                             <button className="btn btn-sm btn-outline-danger ms-3 btn-trash" onClick={()=>handleActiveDelete(t.id)}>

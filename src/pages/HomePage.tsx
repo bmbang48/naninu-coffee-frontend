@@ -57,6 +57,7 @@ const HomePage = () => {
 
   return (
     <div>
+        <Chatbot/>
       {/* <!-- Hero Section --> */}
     <section className="hero-section">
         <div className="container">
@@ -95,9 +96,9 @@ const HomePage = () => {
                             <div className="card-icon mx-auto">
                                 <i className="bi bi-box-seam"></i>
                             </div>
-                            <h5 className="card-title fw-semibold mb-3">Products</h5>
+                            <h5 className="card-title fw-semibold mb-3">Production</h5>
                             <p className="card-text text-muted mb-4">Manage your coffee menu, pricing, and inventory items.</p>
-                            <Link to="/products" className="btn btn-primary-custom">Go to page</Link>
+                            <Link to="/production" className="btn btn-primary-custom">Go to page</Link>
                         </div>
                     </div>
                 </div>
@@ -119,24 +120,23 @@ const HomePage = () => {
                     <div className="card quick-access-card shadow-sm rounded-3 p-4">
                         <div className="card-body text-center">
                             <div className="card-icon mx-auto">
-                                <i className="bi bi-graph-up"></i>
-                            </div>
-                            <h5 className="card-title fw-semibold mb-3">Cost & Benefit</h5>
-                            <p className="card-text text-muted mb-4">Analyze profits, expenses, and financial performance.</p>
-                            <Link to="/hpp" className="btn btn-primary-custom">Go to page</Link>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="col-lg-4 col-md-6">
-                    <div className="card quick-access-card shadow-sm rounded-3 p-4">
-                        <div className="card-body text-center">
-                            <div className="card-icon mx-auto">
                                 <i className="bi bi-receipt"></i>
                             </div>
                             <h5 className="card-title fw-semibold mb-3">Transactions</h5>
                             <p className="card-text text-muted mb-4">View transaction history and payment records.</p>
                             <Link to="/transactions" className="btn btn-primary-custom">Go to page</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-lg-4 col-md-6">
+                    <div className="card quick-access-card shadow-sm rounded-3 p-4">
+                        <div className="card-body text-center">
+                            <div className="card-icon mx-auto">
+                                <i className="bi bi-graph-up"></i>
+                            </div>
+                            <h5 className="card-title fw-semibold mb-3">Operational</h5>
+                            <p className="card-text text-muted mb-4">Analyze profits, expenses, and financial performance.</p>
+                            <Link to="/operational" className="btn btn-primary-custom">Go to page</Link>
                         </div>
                     </div>
                 </div>

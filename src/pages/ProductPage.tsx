@@ -59,8 +59,7 @@ import { Product } from "../types/product";
     
     return (
       <div className="container">
-        <h1 className="text-center mt-3">Our Products</h1>
-        
+
         {
           isActiveForm && (
           <FormProduct 
@@ -80,16 +79,24 @@ import { Product } from "../types/product";
           setIsConfirmDelete={setIsConfirmDelete} /> : null
         }
 
-        <button className="btn btn-success mb-2 btn-add-product " onClick={handleAddProduct}>Add Product</button>
+        <div className="card-header py-3 d-flex justify-content-between align-items-center flex-row">
+                    <h5 className="mb-0">
+                    <i className="bi bi-cup-hot me-2"></i>Products
+                </h5>
+                    
+                <button className="btn btn-success my-0" onClick={handleAddProduct}>
+                    <i className="bi bi-plus-circle me-2"></i>Add Products
+                </button>
+        </div>
         <table className="table table-responsive">
           <thead>
-            <tr className="table-success">
-              <th scope="col">No</th>
-              <th scope="col">Product Name</th>
-              <th scope="col">Price</th>
-              <th scope="col">Description</th>
-              <th scope="col">Picture</th>
-              <th scope="col" className="text-center">Action</th>
+            <tr className="table-success ">
+              <th scope="col" className="py-3">No</th>
+              <th scope="col" className="py-3">Product Name</th>
+              <th scope="col" className="py-3">Price</th>
+              <th scope="col" className="py-3">Description</th>
+              <th scope="col" className="py-3">Picture</th>
+              <th scope="col" className="text-center py-3">Action</th>
             </tr>
           </thead>
           <tbody>

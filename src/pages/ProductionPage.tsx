@@ -1,18 +1,18 @@
 import CardHpp from "../components/CardHpp";
 import MaterialPage from "./MaterialPage";
-import OtherCostPage from "./OtherCostPage";
 import { useRecipes } from "../api/useRecipe";
 import { useState,useMemo } from "react";
 import FormRecipe from "../components/FormRecipe";
 import { Product } from "../types/product";
 import { Recipe } from "../types/recipe";
+import ProductPage from "./ProductPage";
 
 interface GroupedProduct{
     product: Product;
     recipes: Recipe[];
 }
 
-const HppPage = () => {
+const ProductionPage = () => {
 
     const {data: recipes, isLoading: recipesIsLoading, error: recipesError} = useRecipes();
     // console.log(recipes);
@@ -55,14 +55,14 @@ console.log("Ini Group",groupedByProduct);
         <div className="d-flex flex-column">
             <div className="container main-container flex-grow-1">
                 <div className="row">
-                    <h1 className="page-title">Management Cost & Benefit</h1>
+                    <h1 className="page-title">Management Production</h1>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
                         <MaterialPage/>
                     </div>
                     <div className="col-md-6">
-                        <OtherCostPage/>
+                        <ProductPage/>
                     </div>
                 </div>
                 <div className="row mt-3 mt-md-4">
@@ -88,4 +88,4 @@ console.log("Ini Group",groupedByProduct);
     );
 
 }
-export default HppPage;
+export default ProductionPage;

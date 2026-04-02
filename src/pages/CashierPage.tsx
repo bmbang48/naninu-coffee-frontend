@@ -8,7 +8,7 @@ import { useStoreTransaction, useTransactions } from "../api/useTransaction";
 import { useReactToPrint } from "react-to-print";
 import FormOnlineOrder from "../components/FormOnlineOrder";
 import logo from "../../dist/Logo Cup Hijau.png";
-import ChatRecipeBot from "../components/ChatRecipeBot";
+import Chatbot from "../components/ChatBot";
 const CashierPage = () => {
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("");
@@ -151,75 +151,81 @@ const CashierPage = () => {
       const handleBayar = (total,bayar) =>{
         if(bayar < total) {
           alert("Uang tidak cukup");
+          return false;
         } else {
           const kembalian = bayar - total;
           setKembalian(kembalian);
           setTotal(total);
-          // setIsSuccess(!isSuccess);
-          handlePrintClick();
+          return true;
         }
       }
 
-      const saveOrder = (newPrice? :number, newMethod? : string) => {
+      const saveOrder = (finalTotal?: number, newMethod?: string) => {
+
         if(productsList.length === 0){
           alert("Belum ada produk yang dipilih");
           return;
         }
+
         if(customerName === ''){
           alert("Nama customer harus diisi");
           return;
         }
+
+        const totalFix = finalTotal ?? subtotal;
+
         if(paymentMethod === "Cash"){
-          console.log("ini order offline")
-          if(bayar < total){
+          if(bayar === null || bayar === 0){
+            alert("Masukkan jumlah bayar dulu");
+            return;
+          }
+
+          if(bayar < totalFix){ // 🔥 FIX DI SINI
             alert("Uang tidak cukup");
             return;
           }
         }
 
-        const items = productsList?.map((product) => ({
+        const items = productsList.map((product) => ({
           product_id: product.id,
           quantity: product.qty,
           price: product.price,
           subtotal: product.qty * product.price,
         }));
-        if(newPrice){
-          setTotal(newPrice)
-          setOrderMethod(newMethod)
-        }
+
         const payload = {
-            transaction_code : transaction_code,
-            transaction_date : formatDate(transactionDate),
-            customer_name : customerName,
-            discount: diskon,
-            total_price : newPrice ? newPrice : subtotal,
-            pay : newPrice ? newPrice : Number(bayar),
-            change : kembalian, 
-            items : items,
-            tax : tax,
-            order_method: newMethod ? newMethod : "Offline",
-            payment_method: newMethod ? newMethod : paymentMethod
-          };
-      // console.log(payload);
-      storeTransaction(payload, {
-        onSuccess: (data) => {
-          console.log("Transaction saved successfully:", data);
-          setCustomerName("");
-          setSubtotal(0);
-          setProductsList([]);
-          setDiskon(0);
-          setOrderMethod("");
-          setPaymentMethod("");
-          setBayar(0);
-          setKembalian(0);
-          setIsSave(!isSave);
-        },
-        onError: (err) => {
-          console.error("Error saving transaction:" , err);
-      } 
-    }
-      );
-    }
+          transaction_code: transaction_code,
+          transaction_date: formatDate(transactionDate),
+          customer_name: customerName,
+          discount: diskon,
+          total_price: totalFix,
+          pay: Number(bayar),
+          change: kembalian,
+          items: items,
+          tax: tax,
+          order_method: newMethod ?? "Offline",
+          payment_method: newMethod ?? paymentMethod
+        };
+
+        storeTransaction(payload, {
+          onSuccess: (data) => {
+            console.log("Transaction saved successfully:", data);
+
+            handlePrintClick();
+
+            setCustomerName("");
+            setSubtotal(0);
+            setProductsList([]);
+            setDiskon(0);
+            setOrderMethod("");
+            setPaymentMethod("");
+            setBayar(null);
+            setKembalian(null);
+            setIsCash(false);
+            setIsSave(true);
+          }
+        });
+      };
 
     const printRef = useRef<HTMLDivElement>(null);
 
@@ -251,9 +257,9 @@ const CashierPage = () => {
 
   return (
     <div className="container">
-      <ChatRecipeBot/>
+      <Chatbot/>
       {isQris ? (<NotificationAlert
-          message={`Total Harga = ${subtotal}`}
+          message={`Total Harga = ${formatCurrency(subtotal)}`}
           isSuccess={isQris}
           setIsSuccess={setIsQris}
           subject="Pembayaran melalui QRIS"
@@ -415,7 +421,7 @@ const CashierPage = () => {
                       </div>
                       <div className="order-method d-flex justify-content-evenly py-3 flex-wrap " >
                         <div className="w-100 d-flex">
-                        <button className={`btn btn-warning btn-shopeefood flex-fill`}  onClick={()=>handleOnlineForm("ShopeeFood")} disabled={orderMethod !== ""}  >ShopeeFood</button>
+                        <button className={`btn btn-warning btn-shopeefood flex-fill`}  onClick={()=>handleOnlineForm("ShopeeFood")}>ShopeeFood</button>
                         <button className="btn btn-primary btn-grabfood flex-fill" onClick={()=>handleOnlineForm("GrabFood")}>GrabFood</button>
                         <button className="btn btn-danger btn-gofood flex-fill" onClick={()=>handleOnlineForm("GoFood")}>GoFood</button>
                         </div>
@@ -446,7 +452,7 @@ const CashierPage = () => {
                     </div>
                     <div className={`payment-section ${isOfflineOrder ? "" : "d-none"}`}>
                         <div className="payment-method d-flex w-100">
-                          <button className="btn btn-success flex-fill" onClick={()=>{setIsCash(!isCash);setPaymentMethod("Cash")}}>Cash</button>
+                          <button className="btn btn-success flex-fill" onClick={()=>{setIsCash(true);setPaymentMethod("Cash"); setBayar(null)}}>Cash</button>
                           <button className="btn btn-danger flex-fill" onClick={()=>{setPaymentMethod("QRIS"); setBayar(subtotal); setIsQris(true)}}>Qris</button>
                         </div>
                         <div className={`input-group ${isCash ? " " : "d-none"}`}>
@@ -465,8 +471,10 @@ const CashierPage = () => {
                     </div>
                     <div className={`action-buttons ${isOfflineOrder ? "" : "d-none"}`}>
                         <button className="primary-btn" onClick={()=>{
-                              handleBayar(subtotal+tax-diskon, bayar);
-                              saveOrder()}}>
+                              const finalTotal = subtotal + tax - diskon;
+                              const isValid = handleBayar(finalTotal, bayar);
+                              if(!isValid) return;
+                              saveOrder(finalTotal);}}>
                             💳 Bayar Sekarang
                         </button>
                         {/* <button className="secondary-btn" onClick={handlePrintClick}>

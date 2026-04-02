@@ -6,7 +6,7 @@ export const fetchWithAuth = async (endpoint, options:RequestInit = {})=>{
     const response = await fetch(`${baseUrl}/api${endpoint}`,{
         ...options,
         headers: {
-            "Content_Type" : "application/json",
+            "Content-Type" : "application/json",
             "Accept" : "application/json",
             Authorization: token? `Bearer ${token}` : "",
             ...(options.headers || {})
@@ -14,6 +14,11 @@ export const fetchWithAuth = async (endpoint, options:RequestInit = {})=>{
     });
 
     if(response.status === 401) {
+        if(token === "SSO_LOGIN"){
+            console.warn("SSO User, skip logout");
+            return {};
+        }
+
         localStorage.removeItem("token");
         window.location.href = "/";
         return;

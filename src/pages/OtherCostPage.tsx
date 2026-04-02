@@ -35,7 +35,7 @@ const OtherCostPage = () => {
     }
 
     return (
-        <div className="card section-card rounded-3 shadow-sm">
+        <div className="card section-card rounded-3 mt-5 shadow-sm">
             {isActiveForm && 
                 <FormOtherCost 
                 isActiveForm={isActiveForm} 
@@ -54,7 +54,7 @@ const OtherCostPage = () => {
             }
             <div className="card-header py-3 d-flex justify-content-between align-items-center">
                 <h5 className="mb-0">
-                    <i className="bi bi-currency-dollar me-2"></i>Other Cost
+                    Other Cost
                 </h5>
                     <button className="btn btn-success my-0" onClick={handleAddCost}>
                         <i className="bi bi-plus-circle me-2"></i>Add Cost
@@ -81,7 +81,7 @@ const OtherCostPage = () => {
                             <tr key={cost.id}>
                                 <td className="px-3 py-3" scope="col">{index + 1}</td>
                                 <td className="px-3 py-3" scope="col">{cost.name_cost}</td>
-                                <td className="px-3 py-3" scope="col">{formatCurrency(cost.cost_per_product)}</td>
+                                <td className="px-3 py-3" scope="col">{formatCurrency(cost.amount)}</td>
                                 <td className="px-3 py-3">
                                     <button className="btn btn-warning btn-sm me-2" onClick={()=>handleEditCost(cost)}>
                                         <i className="bi bi-pencil"></i>
