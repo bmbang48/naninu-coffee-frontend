@@ -65,7 +65,7 @@ const MaterialPage = () => {
         <div className="card section-card rounded-3 shadow-sm">
             <div className="card-header py-3 d-flex justify-content-between align-items-center flex-row">
                     <h5 className="mb-0">
-                    <i className="bi bi-box-seam me-2"></i>Material Page
+                    <i className="bi bi-box-seam me-2"></i>Material
                 </h5>
                     
                 <button className="btn btn-success my-0" onClick={handleAddMaterial}>

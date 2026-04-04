@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useDashboard } from "../api/useMaterialLog";
 import { useProductsCashier} from "../api/useProduct";
 import { baseUrl } from "../api/baseUrl";
 import NotificationAlert from "../components/NotificationAlert";
@@ -83,6 +84,8 @@ const CashierPage = () => {
       const [isOnlineOrder, setIsOnlineOrder] = useState(false);
       const [orderMethod, setOrderMethod] = useState("");
       const [paymentMethod, setPaymentMethod] = useState("");
+      const [errorTransaction, setErrorTransaction] = useState(null);
+      const {data:dataDashboard, isLoading: loadingDashboard} = useDashboard();
 
       useEffect(() => {
         console.log("productsList Updated:", productsList);
@@ -207,23 +210,29 @@ const CashierPage = () => {
           payment_method: newMethod ?? paymentMethod
         };
 
-        storeTransaction(payload, {
-          onSuccess: (data) => {
-            console.log("Transaction saved successfully:", data);
+          storeTransaction(payload, {
+            onSuccess: (data) => {
+              console.log("Transaction saved successfully:", data);
 
-            handlePrintClick();
+              handlePrintClick();
 
-            setCustomerName("");
-            setSubtotal(0);
-            setProductsList([]);
-            setDiskon(0);
-            setOrderMethod("");
-            setPaymentMethod("");
-            setBayar(null);
-            setKembalian(null);
-            setIsCash(false);
-            setIsSave(true);
-          }
+              setCustomerName("");
+              setSubtotal(0);
+              setProductsList([]);
+              setDiskon(0);
+              setOrderMethod("");
+              setPaymentMethod("");
+              setBayar(null);
+              setKembalian(null);
+              setIsCash(false);
+              setIsSave(true);
+            },
+            onError: (error:any)=>{
+              console.log("ERROR FULL", error);
+              setErrorTransaction(error.response?.data);
+
+              // console.log(err);
+            }
         });
       };
 
@@ -256,8 +265,37 @@ const CashierPage = () => {
 
 
   return (
-    <div className="container">
+    <div className="container pt-3">
       <Chatbot/>
+      { loadingDashboard ? (<p>Loading...</p>): 
+      (<>
+        <h5 className="fw-bold mb-3">⚠️ Low Stock</h5>
+
+        {dataDashboard?.low_stock?.map((item, index) => (
+          <div
+            key={index}
+            className="d-flex align-items-center mb-2"
+            style={{ color: "red", fontWeight: 500 }}
+          >
+            <span style={{ marginRight: 8 }}>⚠️</span>
+            <span>
+              {item.name} : {item.stock} {item.unit} 
+            </span>
+          </div>
+        ))}
+      </>)}
+      {
+        errorTransaction ? (
+          <NotificationAlert 
+          message={errorTransaction.message}
+          subject="Stock Bahan Tidak Cukup"
+          isSuccess={true}
+          setIsSuccess={setIsSave}
+          handleCloseForm={()=>setErrorTransaction(null)}
+        >
+        </NotificationAlert>
+      ) : null
+    }
       {isQris ? (<NotificationAlert
           message={`Total Harga = ${formatCurrency(subtotal)}`}
           isSuccess={isQris}

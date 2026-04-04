@@ -84,8 +84,8 @@ const LoginPage = ()=>{
                 </div>
                 {/* <div className="d-flex justify-content-between align-items-center mb-1" ><label className="checkbox-wrapper"> <input type="checkbox"/> <span>Ingat saya</span> </label> <a href="#" className="forgot-link">Lupa Password?</a> */}
                 {/* </div> */}
-                <button type="submit" className="btn-login">Masuk</button>
-                <button className="btn btn-primary w-100 py-3 rounded-4 mt-3" onClick={handleMicrosoftLogin}>Masuk dengan Microsoft</button>
+                <button type="submit" className="btn-login">Login</button>
+                <button className="btn btn-primary w-100 py-3 rounded-4 mt-3" onClick={handleMicrosoftLogin}>Login with Microsoft</button>
                 </form>
                 <div className="divider">
                 © 2025 Naninu Coffee

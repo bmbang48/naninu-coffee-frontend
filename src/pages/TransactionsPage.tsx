@@ -175,9 +175,6 @@ const TransactionsPage = ()=>{
                                     Daily breakdown for the selected month (1 row = 1 day)
                                 </p>
                             </div>
-                            <div>
-                                <button className="btn btn-success">Add Transaction</button>
-                            </div>
                         </div>
                         <div className="table-responsive">
                             <table className="custom-table">

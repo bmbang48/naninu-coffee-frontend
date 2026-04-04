@@ -24,18 +24,23 @@ interface StoreTransactionPayload {
 
 
 const storeTransaction = async (payload: StoreTransactionPayload) => {
-    await getCsrfCookie();
-    console.log("payload dikirim", JSON.stringify(payload, null, 2));
-    
-    const response = await axios.post(`${baseUrl}/api/transactions`, payload, {
-        withCredentials: true,
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-        },
-    });
-    return response.data;
-}
+  await getCsrfCookie();
+
+  const response = await axios.post(`${baseUrl}/api/transactions`, payload, {
+    withCredentials: true,
+    headers: {
+      Accept: 'application/json',
+      "Content-Type": 'application/json',
+    },
+  });
+
+  // 🔥 INI KUNCINYA
+  if (!response.data.success) {
+    throw response.data; // ⬅️ penting
+  }
+
+  return response.data;
+};
 
 export const useStoreTransaction = () => {
     const queryClient = useQueryClient();

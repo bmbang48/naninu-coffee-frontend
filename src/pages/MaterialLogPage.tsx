@@ -1,4 +1,5 @@
 import { useMaterialLogs } from "../api/useMaterialLog";
+import { useDashboard } from "../api/useMaterialLog";
 import { useState, useEffect } from "react";
 import OperationalPage from "./OperationalPage";
 
@@ -13,7 +14,7 @@ const MaterialLogPage = () => {
   });
 
   const { data, isLoading } = useMaterialLogs({...filter,page});
-  
+  // console.log(dataDashboard)
 
   const logs = data?.data ?? [];
   useEffect(() => {
@@ -23,6 +24,8 @@ const MaterialLogPage = () => {
   return (
     <>
     <OperationalPage/>
+    
+    
     
     <div className="p-4 container mt-3">
 
