@@ -10,6 +10,33 @@ import { Product } from "../types/product";
   const ProductPage = () => {
     const [page,setPage] = useState(1);
     const {data: products, isLoading:productsIsLoading, error: productsError} = useProducts(page);
+    const getPages = () => {
+      const total = products?.data?.last_page || 1;
+      const current = products?.data?.current_page || 1;
+      const delta = 2;
+
+      const pages = [];
+
+      if (current > 3) {
+        pages.push(1);
+        pages.push("...");
+      }
+
+      for (
+        let i = Math.max(1, current - delta);
+        i <= Math.min(total, current + delta);
+        i++
+      ) {
+        pages.push(i);
+      }
+
+      if (current < total - 2) {
+        pages.push("...");
+        pages.push(total);
+      }
+
+      return pages;
+    };
     // console.log(products);
     // productsIsLoading ? console.log('Loading...') : console.log(products.data);
     const items = products?.data??[];
@@ -131,31 +158,44 @@ import { Product } from "../types/product";
             }
           </tbody>
         </table>
-        {lastPage === 1 ? null : (<nav aria-label="Product pagination">
-                    <ul className="pagination justify-content-center">
-                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                            <a className="page-link"
-                                onClick={() => setPage((old)=> old - 1)}
-                                >
-                                    {"<"}
-                            </a>
-                        </li>
-                        {Array.from({length:lastPage}, (_, i)=>(
-                            <li key={i} onClick={()=>setPage(i+1)}>
-                                <a className={`px-2 page-link ${page === i+1 ? "font-bold underline" : ""}`}>
-                                    {i+1}
-                                </a>
-                            </li>
-                        ))}
-                        <li className={`page-item ${currentPage === lastPage ? "disabled" : ""}`}>
-                            <a className="page-link"
-                                onClick={()=> setPage((old)=> old + 1)}
-                                >
-                                {">"}
-                            </a>
-                        </li>
-                    </ul>
-        </nav>)}
+        {lastPage === 1 ? null : (
+          <div className="d-flex justify-content-center mt-3 w-100">
+                        <button
+                            className="btn btn-sm btn-secondary me-2"
+                            disabled={products?.data?.current_page === 1}
+                            onClick={() => setPage(page - 1)}
+                        >
+                            Prev
+                        </button>
+
+                        {getPages().map((pageNum, i) =>
+                        pageNum === "..." ? (
+                            <span key={i} className="mx-1">...</span>
+                        ) : (
+                            <button
+                            key={i}
+                            className={`btn btn-sm me-1 ${
+                                products?.data?.current_page === pageNum
+                                ? "btn-success"
+                                : "btn-outline-success"
+                            }`}
+                            onClick={() => setPage(pageNum)}
+                            >
+                            {pageNum}
+                            </button>
+                        )
+                        )}
+
+                        <button
+                            className="btn btn-sm btn-secondary ms-2"
+                            disabled={products?.data?.current_page === products?.data?.last_page}
+                            onClick={() => setPage(page + 1)}
+                        >
+                            Next
+                        </button>
+
+                        </div>
+          )}
       </div>
     );
   }

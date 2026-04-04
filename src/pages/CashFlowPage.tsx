@@ -6,11 +6,44 @@ import { getDateRange } from "../api/getDate";
 import CashFlowChart from "../components/CashFlowChart";
 import OtherCostPage from "./OtherCostPage";
 const CashFlowPage = ()=>{
+    
     const [page,setPage] = useState(1);
     const [filter, setFilter] = useState({
     start_date: "",
     end_date: ""
     });
+    const { data, isLoading } = useCashflows(filter);
+    const { data: summary } = useCashflowSummary();
+    const createCashflow = useCreateCashflow();
+    const { data: chartData } = useCashflowChart(filter);
+    const { data:cashflow } = useCashflow(filter);
+    const getPages = () => {
+        const total = data?.last_page || 1;
+        const current = data?.current_page || 1;
+        const delta = 2;
+
+        const pages = [];
+
+        if (current > 3) {
+            pages.push(1);
+            pages.push("...");
+        }
+
+        for (
+            let i = Math.max(1, current - delta);
+            i <= Math.min(total, current + delta);
+            i++
+        ) {
+            pages.push(i);
+        }
+
+        if (current < total - 2) {
+            pages.push("...");
+            pages.push(total);
+        }
+
+        return pages;
+        };
 
     const [form, setForm] = useState({
     type: "OUT",
@@ -20,11 +53,7 @@ const CashFlowPage = ()=>{
     date: ""
     });
 
-    const { data, isLoading } = useCashflows(filter);
-    const { data: summary } = useCashflowSummary();
-    const createCashflow = useCreateCashflow();
-    const { data: chartData } = useCashflowChart(filter);
-    const { data:cashflow } = useCashflow(filter);
+    
 
     useEffect(() => {
         setFilter(getDateRange("month"));
@@ -136,7 +165,7 @@ const CashFlowPage = ()=>{
                         });
                         }}
                     >
-                        Simpan
+                        Submit
                     </button>
                     </div>
 
@@ -236,19 +265,23 @@ const CashFlowPage = ()=>{
                         >
                             Prev
                         </button>
-
-                        {[...Array(data?.last_page || 1)].map((_, i) => (
-                            <button
-                            key={i}
-                            className={`btn btn-sm me-1 ${
-                                data?.current_page === i + 1 ? "btn-success" : "btn-outline-success"
-                            }`}
-                            onClick={() => setPage(i + 1)}
-                            >
-                            {i + 1}
-                            </button>
-                        ))}
-
+                        {getPages().map((pageNum, i) =>
+                            pageNum === "..." ? (
+                                <span key={i} className="mx-1">...</span>
+                            ) : (
+                                <button
+                                key={i}
+                                className={`btn btn-sm me-1 ${
+                                    data?.current_page === pageNum
+                                    ? "btn-success"
+                                    : "btn-outline-success"
+                                }`}
+                                onClick={() => setPage(pageNum)}
+                                >
+                                {pageNum}
+                                </button>
+                            )
+                        )}
                         <button
                             className="btn btn-sm btn-secondary ms-2"
                             disabled={data?.current_page === data?.last_page}

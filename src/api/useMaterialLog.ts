@@ -17,6 +17,7 @@ export const useDashboard = () => {
     queryFn: async () => {
       const res = await api.get("/dashboard");
       return res.data;
-    }
+    },
+    refetchInterval: 5000 // 🔥 tiap 5 detik update
   });
 };

@@ -10,7 +10,11 @@ import { useReactToPrint } from "react-to-print";
 import FormOnlineOrder from "../components/FormOnlineOrder";
 import logo from "../../dist/Logo Cup Hijau.png";
 import Chatbot from "../components/ChatBot";
+import { useQueryClient } from "@tanstack/react-query";
+import ChatRecipeBot from "../components/ChatRecipeBot";
+
 const CashierPage = () => {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -74,6 +78,7 @@ const CashierPage = () => {
       const [diskon, setDiskon] = useState<number>(0);
       const [subtotal,setSubtotal]=useState<number>(0);
       const [total, setTotal] = useState(0);
+      const [loading, setLoading] = useState(false);
       
       const [isSuccess,setIsSuccess] = useState(false);
       const [isSave,setIsSave] = useState(false);
@@ -150,7 +155,7 @@ const CashierPage = () => {
       }
       
       
-      const { mutate: storeTransaction } = useStoreTransaction();
+      const { mutateAsync: storeTransaction } = useStoreTransaction();
       const handleBayar = (total,bayar) =>{
         if(bayar < total) {
           alert("Uang tidak cukup");
@@ -163,7 +168,7 @@ const CashierPage = () => {
         }
       }
 
-      const saveOrder = (finalTotal?: number, newMethod?: string) => {
+      const saveOrder = async (finalTotal?: number, newMethod?: string) => {
 
         if(productsList.length === 0){
           alert("Belum ada produk yang dipilih");
@@ -202,38 +207,45 @@ const CashierPage = () => {
           customer_name: customerName,
           discount: diskon,
           total_price: totalFix,
-          pay: Number(bayar),
-          change: kembalian,
-          items: items,
-          tax: tax,
+          pay: isCash ? Number(bayar) : totalFix,
+          change: isCash ? kembalian : 0,
+          items,
+          tax,
           order_method: newMethod ?? "Offline",
           payment_method: newMethod ?? paymentMethod
         };
+        console.log("Payload", payload);
+          try {
+            const res = await storeTransaction(payload);
 
-          storeTransaction(payload, {
-            onSuccess: (data) => {
-              console.log("Transaction saved successfully:", data);
-
-              handlePrintClick();
-
-              setCustomerName("");
-              setSubtotal(0);
-              setProductsList([]);
-              setDiskon(0);
-              setOrderMethod("");
-              setPaymentMethod("");
-              setBayar(null);
-              setKembalian(null);
-              setIsCash(false);
-              setIsSave(true);
-            },
-            onError: (error:any)=>{
-              console.log("ERROR FULL", error);
-              setErrorTransaction(error.response?.data);
-
-              // console.log(err);
+            if (!res.success) {
+              setErrorTransaction(res);
+              return;
             }
-        });
+
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+
+            handlePrintClick();
+
+            setCustomerName("");
+            setProductsList([]);
+            setDiskon(0);
+            setOrderMethod("");
+            setPaymentMethod("");
+            setBayar(null);
+            setKembalian(null);
+            setIsCash(false);
+            setIsSave(true);
+            if (loading) return;
+            setLoading(true);
+
+          } catch (err: any) {
+            console.log("ERROR", err);
+
+            setErrorTransaction(err.response?.data);
+          }finally{
+            setLoading(false);
+          }
       };
 
     const printRef = useRef<HTMLDivElement>(null);
@@ -266,7 +278,7 @@ const CashierPage = () => {
 
   return (
     <div className="container pt-3">
-      <Chatbot/>
+      <ChatRecipeBot/>
       { loadingDashboard ? (<p>Loading...</p>): 
       (<>
         <h5 className="fw-bold mb-3">⚠️ Low Stock</h5>
@@ -512,8 +524,8 @@ const CashierPage = () => {
                               const finalTotal = subtotal + tax - diskon;
                               const isValid = handleBayar(finalTotal, bayar);
                               if(!isValid) return;
-                              saveOrder(finalTotal);}}>
-                            💳 Bayar Sekarang
+                              saveOrder(finalTotal);}} disabled={loading}>
+                            {loading ? "Processing...":  "💳 Bayar Sekarang"}
                         </button>
                         {/* <button className="secondary-btn" onClick={handlePrintClick}>
                             🖨️ Cetak Struk

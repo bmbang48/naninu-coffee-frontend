@@ -13,6 +13,34 @@ const MaterialLogPage = () => {
     end_date: ""  
   });
 
+  const getPages = () => {
+    const total = data?.last_page || 1;
+    const current = data?.current_page || 1;
+    const delta = 2;
+
+    const pages = [];
+
+    if (current > 3) {
+      pages.push(1);
+      pages.push("...");
+    }
+
+    for (
+      let i = Math.max(1, current - delta);
+      i <= Math.min(total, current + delta);
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) {
+      pages.push("...");
+      pages.push(total);
+    }
+
+    return pages;
+  };
+
   const { data, isLoading } = useMaterialLogs({...filter,page});
   // console.log(dataDashboard)
 
@@ -105,7 +133,7 @@ const MaterialLogPage = () => {
           ))}
         </tbody>
       </table>
-        <div className="d-flex justify-content-center mt-3">
+        <div className="d-flex justify-content-center mt-3 w-100">
 
         <button
             className="btn btn-sm btn-secondary me-2"
@@ -115,17 +143,23 @@ const MaterialLogPage = () => {
             Prev
         </button>
 
-        {[...Array(data?.last_page || 1)].map((_, i) => (
+        {getPages().map((pageNum, i) =>
+          pageNum === "..." ? (
+            <span key={i} className="mx-1">...</span>
+          ) : (
             <button
-            key={i}
-            className={`btn btn-sm me-1 ${
-                data?.current_page === i + 1 ? "btn-success" : "btn-outline-success"
-            }`}
-            onClick={() => setPage(i + 1)}
+              key={i}
+              className={`btn btn-sm me-1 ${
+                data?.current_page === pageNum
+                  ? "btn-success"
+                  : "btn-outline-success"
+              }`}
+              onClick={() => setPage(pageNum)}
             >
-            {i + 1}
+              {pageNum}
             </button>
-        ))}
+          )
+        )}
 
         <button
             className="btn btn-sm btn-secondary ms-2"

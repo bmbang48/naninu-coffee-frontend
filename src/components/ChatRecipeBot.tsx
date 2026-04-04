@@ -11,10 +11,8 @@ export default function ChatRecipeBot() {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    // simpan pesan user
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
-
     setLoading(true);
 
     try {
@@ -22,22 +20,18 @@ export default function ChatRecipeBot() {
         "https://chronos.ploutosforge.com/webhook/chatbot",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: input }),
         }
       );
 
       const data = await res.json();
 
-      const botMessage = {
-        sender: "bot",
-        text: data.reply || "⚠️ Tidak ada respon",
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: data.reply || "⚠️ Tidak ada respon" },
+      ]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         { sender: "bot", text: "❌ Error koneksi ke server" },
@@ -49,99 +43,92 @@ export default function ChatRecipeBot() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
+    if (e.key === "Enter") sendMessage();
   };
 
   return (
-    <div style={styles.container} className="z-3 pt-2">
-        <button onClick={() => setOpen(!open)} className="btn btn-small">
-            💬
+    <>
+      {/* ✅ FLOATING BUTTON */}
+      {!open && (
+        <button
+          className="btn btn-success rounded-circle shadow"
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            width: "60px",
+            height: "60px",
+            fontSize: "24px",
+          }}
+          onClick={() => setOpen(true)}
+        >
+          💬
         </button>
-        {open && 
-      <div style={styles.chatBox}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            style={{
-              ...styles.message,
-              alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
-              background: msg.sender === "user" ? "#4caf50" : "#eee",
-              color: msg.sender === "user" ? "#fff" : "#000",
-              whiteSpace: "pre-line",
-                fontWeight: msg.sender === "bot" ? "500" : "normal"
-            }}
-          >
-            {msg.text}
-          </div>
-        ))}
-        {loading && <div style={styles.loading}>Bot sedang mengetik...</div>}
-      </div>
-        }
+      )}
 
-      <div style={styles.inputContainer}>
-        <input
-          type="text"
-          value={input}
-          placeholder="Ketik menu (contoh: latte)"
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          style={styles.input}
-        />
-        <button onClick={sendMessage} style={styles.button}>
-          Kirim
-        </button>
-      </div>
-    </div>
+      {/* ✅ CHATBOX */}
+      {open && (
+        <div
+          className="card shadow"
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            width: "320px",
+            height: "420px",
+          }}
+        >
+          {/* HEADER */}
+          <div className="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <span className="text-white">Chat Resep</span>
+            <button
+              className="cursor-pointer text-white bg-transparent border-0"
+              onClick={() => setOpen(false)}
+            >
+              ✖
+            </button>
+          </div>
+
+          {/* CHAT */}
+          <div
+            className="card-body d-flex flex-column gap-2"
+            style={{ overflowY: "auto" }}
+          >
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`p-2 rounded ${
+                  msg.sender === "user"
+                    ? "bg-success text-white align-self-end"
+                    : "bg-light align-self-start"
+                }`}
+                style={{ maxWidth: "80%" }}
+              >
+                {msg.text}
+              </div>
+            ))}
+
+            {loading && (
+              <small className="text-muted">Bot sedang mengetik...</small>
+            )}
+          </div>
+
+          {/* INPUT */}
+          <div className="card-footer d-flex p-2">
+            <input
+              type="text"
+              className="form-control me-2"
+              placeholder="Ketik menu..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button className="btn btn-success" onClick={sendMessage}>
+              Kirim
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
-
-const styles = {
-  container: {
-    width: "300px",
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    background: "#fff",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-    display: "flex",
-    flexDirection: "column",
-  } as const,
-  chatBox: {
-    height: "300px",
-    overflowY: "auto",
-    padding: "10px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-  } as const,
-  message: {
-    padding: "8px 12px",
-    borderRadius: "8px",
-    maxWidth: "80%",
-  } as const,
-  inputContainer: {
-    display: "flex",
-    borderTop: "1px solid #ccc",
-  }as const,
-  input: {
-    flex: 1,
-    padding: "10px",
-    border: "none",
-    outline: "none",
-  }as const,
-  button: {
-    padding: "10px",
-    border: "none",
-    background: "#4caf50",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  loading: {
-    fontSize: "12px",
-    color: "#888",
-  }as const,
-};
