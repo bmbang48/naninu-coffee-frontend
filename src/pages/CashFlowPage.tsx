@@ -12,7 +12,7 @@ const CashFlowPage = ()=>{
     start_date: "",
     end_date: ""
     });
-    const { data, isLoading } = useCashflows(filter);
+    const { data, isLoading } = useCashflows({...filter, page});
     const { data: summary } = useCashflowSummary();
     const createCashflow = useCreateCashflow();
     const { data: chartData } = useCashflowChart(filter);
@@ -52,6 +52,9 @@ const CashFlowPage = ()=>{
     note: "",
     date: ""
     });
+    useEffect(() => {
+    setPage(1);
+    }, [filter]);
 
     
 

@@ -45,7 +45,7 @@ export default function ChatRecipeBot() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") sendMessage();
   };
-
+  // console.log(messages);
   return (
     <>
       {/* ✅ FLOATING BUTTON */}
@@ -74,8 +74,9 @@ export default function ChatRecipeBot() {
             position: "fixed",
             bottom: "20px",
             right: "20px",
-            width: "320px",
+            width: "420px",
             height: "420px",
+            zIndex: "99"
           }}
         >
           {/* HEADER */}
@@ -102,7 +103,7 @@ export default function ChatRecipeBot() {
                     ? "bg-success text-white align-self-end"
                     : "bg-light align-self-start"
                 }`}
-                style={{ maxWidth: "80%" }}
+                style={{ maxWidth: "80%",  whiteSpace:"pre-wrap"}}
               >
                 {msg.text}
               </div>

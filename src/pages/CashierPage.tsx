@@ -64,8 +64,6 @@ const CashierPage = () => {
 
         const nextNumber = todayTransactions.length + 1;
 
-        console.log(todayStr);
-        console.log(transactions);
         return `${String(nextNumber).padStart(3,"0")}-${dateDisplay}`;
       }
 
@@ -92,17 +90,37 @@ const CashierPage = () => {
       const [errorTransaction, setErrorTransaction] = useState(null);
       const {data:dataDashboard, isLoading: loadingDashboard} = useDashboard();
 
-      useEffect(() => {
-        console.log("productsList Updated:", productsList);
-        
-      }, [productsList]);
-
-      useEffect(() => {
-        console.log("Kembalian Updated:", kembalian);
-      }, [kembalian]);
+      
 
       const transaction_code = generateTransactionCode();
 
+      const getPages = () => {
+        const total = lastPage || 1;
+        const current = currentPage || 1;
+        const delta = 2;
+
+        const pages = [];
+
+        if (current > 3) {
+            pages.push(1);
+            pages.push("...");
+        }
+
+        for (
+            let i = Math.max(1, current - delta);
+            i <= Math.min(total, current + delta);
+            i++
+        ) {
+            pages.push(i);
+        }
+
+        if (current < total - 2) {
+            pages.push("...");
+            pages.push(total);
+        }
+
+        return pages;
+        };
       // const [transaction_code, setTransactionCode] = useState(`${Math.ceil(Math.random() * 1000)}-${new Date().toLocaleDateString("id-ID").split("/").join("-")}`); 
 
       // const [qty, setQty] = useState(0);
@@ -215,6 +233,9 @@ const CashierPage = () => {
           payment_method: newMethod ?? paymentMethod
         };
         console.log("Payload", payload);
+
+            if (loading) return;
+            setLoading(true);
           try {
             const res = await storeTransaction(payload);
 
@@ -236,8 +257,7 @@ const CashierPage = () => {
             setKembalian(null);
             setIsCash(false);
             setIsSave(true);
-            if (loading) return;
-            setLoading(true);
+            setErrorTransaction(null); 
 
           } catch (err: any) {
             console.log("ERROR", err);
@@ -379,31 +399,43 @@ const CashierPage = () => {
                 </div>
                 <div className="row">
                   <div className="col-12 mt-3">
-                {lastPage === 1 ? null : <nav aria-label="Product pagination">
-                    <ul className="pagination justify-content-center">
-                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                            <a className="page-link"
-                                onClick={() => setPage((old)=> old - 1)}
-                                >
-                                    {"<"}
-                            </a>
-                        </li>
-                        {Array.from({length:lastPage}, (_, i)=>(
-                            <li key={i} onClick={()=>setPage(i+1)}>
-                                <a className={`px-2 page-link ${page === i+1 ? "font-bold underline" : ""}`}>
-                                    {i+1}
-                                </a>
-                            </li>
-                        ))}
-                        <li className={`page-item ${currentPage === lastPage ? "disabled" : ""}`}>
-                            <a className="page-link"
-                                onClick={()=> setPage((old)=> old + 1)}
-                                >
-                                {">"}
-                            </a>
-                        </li>
-                    </ul>
-                </nav>}
+                {lastPage === 1 ? null : <div className="d-flex justify-content-center mt-3 w-100">
+                  <button
+                      className="btn btn-sm btn-secondary me-2"
+                      disabled={currentPage === 1}
+                      onClick={() => setPage(page - 1)}
+                  >
+                      Prev
+                  </button>
+
+                  {getPages().map((pageNum, i) =>
+                    pageNum === "..." ? (
+                      <span key={i} className="mx-1">...</span>
+                    ) : (
+                      <button
+                        key={i}
+                        className={`btn btn-sm me-1 ${
+                          currentPage === pageNum
+                            ? "btn-success"
+                            : "btn-outline-success"
+                        }`}
+                        onClick={() => setPage(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  )}
+
+                  <button
+                      className="btn btn-sm btn-secondary ms-2"
+                      disabled={currentPage === lastPage}
+                      onClick={() => setPage(page + 1)}
+                  >
+                      Next
+                  </button>
+
+                  </div>}
+                
             </div>
                 </div>
             </div>
