@@ -19,6 +19,7 @@ interface Transaction{
     customer_name: string ;
     pay: number;
     total_price: number;
+    total_profit: number;
     order_method:string;
     payment_method:string;
     transaction_code: string;
@@ -249,6 +250,11 @@ const TransactionsPage = ()=>{
                                             <td className="text-end total-price">
                                                 {
                                                     formatCurrency(transaction.reduce((sum, t) => sum + t.total_price,0))
+                                                }
+                                            </td>
+                                            <td className="text-end total-price">
+                                                {
+                                                    formatCurrency(transaction.reduce((sum, t) => sum + Number(t.total_profit),0))
                                                 }
                                             </td>
                                             <td className="text-center">
